@@ -262,6 +262,8 @@ function pasuje(p,s){const pl=p.platformy||[];
   return pl.includes("instagram")}
 function status(p,tryb,c){
   const tz=c.planer.strefa,t=termin(p),st=p.stan||{},k=t?terminTxt(t):"",usa=t?" ("+godz(t,tz)+" – "+krotkaStrefa(tz)+")":"";
+  const wy=(c.wysylka||[]).find(x=>x.folder===(p.folder||p.id));
+  if(wy)return{k:"info",ik:"⬆️",t:"Trwa wysyłanie na "+(wy.platforma==="tiktok"?"TikToka":"YouTube")+": "+wy.proc+"%",d:"Nie zamykaj komputera. Wysyłanie potrafi potrwać kilka minut."};
   if(p.wstrzymany)return{k:"wrt",ik:"⏸",t:"Wstrzymany",d:"Nie zostanie wysłany, dopóki go nie wznowisz."};
   if(tryb==="pula")return{k:"szary",ik:"🕓",t:"Gotowy, czeka na wolny termin",d:"Plan sam przydzieli mu godzinę."};
   if(APP.sub==="tiktok"){const tt=st.tiktok;
@@ -397,7 +399,7 @@ function szybkie(t){const k=g("u_"+t+"_s");k.replaceChildren();k.append($("span"
     b.onclick=()=>{const ist=godziny("u_"+t+"_l");if(ist.includes(h)){g("u_"+t+"_l").querySelectorAll(".godz").forEach(r=>{if(wartosc(r)===h)r.remove()})}else wiersz("u_"+t+"_l",h);odswiezPodglad()};k.append(b)})}
 function otworzUstawienia(c){const u=c.planer;g("u_tytul").textContent="Plan publikacji • "+c.nazwa;wypelnijStrefy(u.strefa);ustawZapas=+u.zapas_dni;
   ["film","short"].forEach(t=>{g("u_"+t+"_l").replaceChildren();(u.godziny[t]||[]).slice().sort().forEach(x=>wiersz("u_"+t+"_l",x));szybkie(t)});
-  odswiezPodglad();g("u_blad").style.display="none";g("ustaw").classList.add("on");g("ustaw").querySelector(".tresc").scrollTop=0}
+  odswiezPodglad();g("u_blad").style.display="none";if(APP.hooki.poUstawieniach)APP.hooki.poUstawieniach(c);g("ustaw").classList.add("on");g("ustaw").querySelector(".tresc").scrollTop=0}
 function initUstawienia(){
   initKalendarz();
   g("u_strefa").onchange=odswiezPodglad;
