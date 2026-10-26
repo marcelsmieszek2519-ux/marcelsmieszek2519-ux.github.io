@@ -27,6 +27,9 @@ input{width:100%;font:inherit;color:var(--tx);background:var(--in);border:1px so
 .sub2 button.on{color:var(--tx);border-bottom-color:var(--acc);font-weight:600}
 .k.z{display:flex;gap:12px}.k.z .im{flex:none;width:112px;height:63px;border-radius:8px;background:var(--line);object-fit:cover;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:11px}
 .k.z .tr{flex:1;min-width:0}.gear{background:none;border:1px solid var(--line);color:var(--mut);border-radius:8px;padding:5px 10px;font:inherit;font-size:13px;margin-left:auto}
+.gr{display:flex;gap:10px;align-items:center;margin:6px 0}.gr input{width:auto}.gr .hint{margin:0;flex:1}
+select{width:100%;font:inherit;color:var(--tx);background:var(--in);border:1px solid var(--line);border-radius:8px;padding:10px}
+.btn.zly{color:var(--bad);border-color:var(--bad)}
 </style></head><body>
 <div class="ekran" id="login"><div class="w"><h1>Publikator</h1>
 <label>E-mail</label><input id="em" type="email" autocomplete="username">
@@ -39,10 +42,13 @@ input{width:100%;font:inherit;color:var(--tx);background:var(--in);border:1px so
 <div class="ekran" id="ustaw"><div class="w">
 <h1 id="u_tytul">Ustawienia kanału</h1>
 <div class="hint">Zapisane tutaj ustawienia komputer pobierze, gdy będzie włączony (zwykle w ciągu kilku minut). Dotyczą filmów, które planer dopiero ułoży; filmy już wgrane zmienisz w YouTube Studio.</div>
-<label>Strefa czasowa widowni (np. America/New_York)</label><input id="u_strefa">
-<label>Zapas dni (0–14)</label><input id="u_zapas" type="number" min="0" max="14">
-<label>Godziny filmów w strefie widowni (po przecinku, np. 14:00, 19:00)</label><input id="u_film">
-<label>Godziny shortów (po przecinku, puste = brak)</label><input id="u_short">
+<label>Strefa czasowa widowni (dla kogo publikujesz; zmiana czasu letni/zimowy liczy się sama)</label><select id="u_strefa"></select>
+<div class="hint" id="u_teraz"></div>
+<label>Zapas dni (na ile dni do przodu trzymamy wgrane filmy, 0–14)</label><input id="u_zapas" type="number" min="0" max="14">
+<label>Godziny publikacji filmów (liczba godzin = liczba filmów dziennie)</label><div id="u_film_l"></div>
+<button type="button" class="btn m2" id="u_film_d">+ Dodaj godzinę</button>
+<label>Godziny publikacji shortów</label><div id="u_short_l"></div>
+<button type="button" class="btn m2" id="u_short_d">+ Dodaj godzinę</button>
 <div class="m"><button class="btn" id="u_zapisz">Zapisz</button><button class="btn" id="u_anuluj">Anuluj</button><span class="b bad" id="u_blad" style="display:none"></span></div>
 </div></div>
 
@@ -130,19 +136,51 @@ function init(){
   g("zaloguj").onclick=async()=>{try{await firebase.auth().signInWithEmailAndPassword(g("em").value.trim(),g("ha").value);g("lblad").style.display="none"}
     catch(e){const b=g("lblad");b.textContent="nie udało się zalogować";b.style.display=""}}}
 /* ---------- ustawienia ---------- */
-g("gear").onclick=()=>{const c=D.find(x=>x.id===cur);if(!c)return;const u=c.planer;
-  g("u_tytul").textContent="Ustawienia • "+c.nazwa;g("u_strefa").value=u.strefa;g("u_zapas").value=u.zapas_dni;
-  g("u_film").value=(u.godziny.film||[]).join(", ");g("u_short").value=(u.godziny.short||[]).join(", ");
-  g("u_blad").style.display="none";g("ustaw").classList.add("on");window.scrollTo(0,0)};
+
+/* ---------- strefy czasowe i godziny (wybór zamiast pisania) ---------- */
+const STREFY=[
+["USA i Kanada",[["America/New_York","Wschodnie USA: Nowy Jork, Waszyngton, Miami, Atlanta (ET)"],["America/Chicago","Środkowe USA: Chicago, Dallas, Houston (CT)"],["America/Denver","Górskie USA: Denver, Salt Lake City (MT)"],["America/Phoenix","Arizona: Phoenix (bez zmiany czasu)"],["America/Los_Angeles","Zachodnie USA: Los Angeles, San Francisco, Seattle (PT)"],["America/Anchorage","Alaska: Anchorage"],["Pacific/Honolulu","Hawaje: Honolulu"],["America/Toronto","Kanada wschodnia: Toronto, Montreal"],["America/Vancouver","Kanada zachodnia: Vancouver"]]],
+["Ameryka Łacińska",[["America/Mexico_City","Meksyk: Meksyk"],["America/Bogota","Kolumbia, Peru: Bogota, Lima"],["America/Sao_Paulo","Brazylia: Sao Paulo, Rio de Janeiro"],["America/Argentina/Buenos_Aires","Argentyna: Buenos Aires"],["America/Santiago","Chile: Santiago"]]],
+["Europa",[["Europe/London","Wielka Brytania i Irlandia: Londyn, Dublin"],["Europe/Warsaw","Europa Środkowa: Warszawa, Berlin, Paryż, Rzym (CET)"],["Europe/Athens","Europa Wschodnia: Ateny, Helsinki, Kijów"],["Europe/Moscow","Rosja: Moskwa"]]],
+["Azja",[["Asia/Dubai","Zatoka Perska: Dubaj"],["Asia/Kolkata","Indie: Delhi, Mumbaj"],["Asia/Manila","Filipiny: Manila"],["Asia/Singapore","Singapur i Malezja"],["Asia/Shanghai","Chiny: Pekin, Szanghaj"],["Asia/Tokyo","Japonia: Tokio"],["Asia/Seoul","Korea Południowa: Seul"]]],
+["Australia i Oceania",[["Australia/Sydney","Australia wschodnia: Sydney, Melbourne"],["Australia/Perth","Australia zachodnia: Perth"],["Pacific/Auckland","Nowa Zelandia: Auckland"]]],
+["Afryka",[["Africa/Lagos","Nigeria: Lagos"],["Africa/Cairo","Egipt: Kair"],["Africa/Nairobi","Kenia: Nairobi"],["Africa/Johannesburg","RPA: Johannesburg, Kapsztad"]]]];
+function tzOff(strefa,ms){ms=Math.floor(ms/1000)*1000;const p=new Intl.DateTimeFormat("en-US",{timeZone:strefa,hourCycle:"h23",year:"numeric",month:"numeric",day:"numeric",hour:"numeric",minute:"numeric",second:"numeric"})
+  .formatToParts(new Date(ms)).reduce((a,x)=>(a[x.type]=+x.value,a),{});return Date.UTC(p.year,p.month-1,p.day,p.hour,p.minute,p.second)-ms}
+function utcTxt(strefa){const min=Math.round(tzOff(strefa,Date.now())/900000)*15,a=Math.abs(min);return"UTC"+(min>=0?"+":"−")+Math.floor(a/60)+(a%60?":"+String(a%60).padStart(2,"0"):"")}
+function wPolsce(strefa,hhmm){
+  if(!/^\d\d:\d\d$/.test(hhmm))return"";
+  try{const[h,mi]=hhmm.split(":").map(Number);const teraz=Date.now();
+    const lokalnie=teraz+tzOff(strefa,teraz);const d=new Date(lokalnie);
+    let guess=Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate(),h,mi);let t=guess-tzOff(strefa,guess);t=guess-tzOff(strefa,t);
+    const pl=t+tzOff("Europe/Warsaw",t),tam=t+tzOff(strefa,t);
+    const dzien=Math.floor(pl/864e5)-Math.floor(tam/864e5),gg=new Date(pl);
+    const txt=String(gg.getUTCHours()).padStart(2,"0")+":"+String(gg.getUTCMinutes()).padStart(2,"0");
+    return "= "+txt+" w Polsce"+(dzien>0?" (następnego dnia)":dzien<0?" (poprzedniego dnia)":"")}catch(e){return""}}
+function wypelnijStrefy(wybrana){const s=g("u_strefa");s.replaceChildren();let jest=false;
+  STREFY.forEach(([grupa,lista])=>{const og=document.createElement("optgroup");og.label=grupa;
+    lista.forEach(([id,opis])=>{const o=document.createElement("option");o.value=id;o.textContent=opis+" • "+utcTxt(id);if(id===wybrana){o.selected=true;jest=true}og.append(o)});s.append(og)});
+  if(!jest&&wybrana){const o=document.createElement("option");o.value=wybrana;o.textContent=wybrana;o.selected=true;s.prepend(o)}}
+function odswiezPodglad(){const st=g("u_strefa").value;
+  g("u_teraz").textContent=st?"Teraz tam: "+new Date().toLocaleString("pl-PL",{timeZone:st,weekday:"short",hour:"2-digit",minute:"2-digit"})+" ("+utcTxt(st)+"). U Ciebie: "+new Date().toLocaleString("pl-PL",{timeZone:"Europe/Warsaw",hour:"2-digit",minute:"2-digit"})+". Przeliczenie godzin na czas polski jest na dziś; gdy w USA lub Polsce zmieni się czas, różnica może się zmienić o godzinę.":"";
+  ["film","short"].forEach(t=>g("u_"+t+"_l").querySelectorAll(".gr").forEach(r=>{r.querySelector(".hint").textContent=wPolsce(st,r.querySelector("input").value)}))}
+function wiersz(kont,wartosc){const r=$("div","gr");const i=document.createElement("input");i.type="time";i.value=wartosc||"14:00";i.oninput=odswiezPodglad;
+  const h=$("span","hint","");const x=$("button","btn m2 zly","✕");x.type="button";x.title="Usuń godzinę";x.onclick=()=>{r.remove();odswiezPodglad()};r.append(i,h,x);g(kont).append(r)}
+function godziny(kont){return[...new Set([...g(kont).querySelectorAll("input")].map(i=>i.value).filter(Boolean))].sort()}
+function otworzUstawienia(c){const u=c.planer;g("u_tytul").textContent="Ustawienia • "+c.nazwa;wypelnijStrefy(u.strefa);g("u_zapas").value=u.zapas_dni;
+  g("u_film_l").replaceChildren();g("u_short_l").replaceChildren();(u.godziny.film||[]).forEach(x=>wiersz("u_film_l",x));(u.godziny.short||[]).forEach(x=>wiersz("u_short_l",x));
+  odswiezPodglad();g("u_blad").style.display="none";g("ustaw").classList.add("on");window.scrollTo(0,0)}
+g("u_strefa").onchange=odswiezPodglad;
+g("u_film_d").onclick=()=>{wiersz("u_film_l","14:00");odswiezPodglad()};g("u_short_d").onclick=()=>{wiersz("u_short_l","14:00");odswiezPodglad()};
 g("u_anuluj").onclick=()=>{g("ustaw").classList.remove("on");rysuj()};
+g("gear").onclick=()=>{const c=D.find(x=>x.id===cur);if(c)otworzUstawienia(c)};
 g("u_zapisz").onclick=async()=>{
   try{const z=+g("u_zapas").value;if(!(z>=0&&z<=14))throw new Error("zapas 0-14 dni");
-    const lista=t=>g(t).value.split(",").map(x=>x.trim()).filter(Boolean);
-    for(const t of[...lista("u_film"),...lista("u_short")])if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(t))throw new Error("zła godzina: "+t);
-    await db.collection("ustawienia").doc(cur).set({strefa:g("u_strefa").value.trim(),zapas_dni:z,godziny_film:lista("u_film").join(","),
-      godziny_short:lista("u_short").join(","),zmieniono:new Date().toISOString().replace(/\.\d+Z$/,"Z")});
+    const film=godziny("u_film_l"),shorty=godziny("u_short_l"),strefa=g("u_strefa").value;
+    await db.collection("ustawienia").doc(cur).set({strefa,zapas_dni:z,godziny_film:film.join(","),godziny_short:shorty.join(","),
+      zmieniono:new Date().toISOString().replace(/\.\d+Z$/,"Z")});
     const c=D.find(x=>x.id===cur);   /* od razu pokaż nową wartość; komputer pobierze ją w ciągu ok. minuty */
-    c.planer={...c.planer,strefa:g("u_strefa").value.trim(),zapas_dni:z,godziny:{film:lista("u_film"),short:lista("u_short")}};
+    c.planer={...c.planer,strefa,zapas_dni:z,godziny:{film,short:shorty}};
     oczekuje=Date.now();g("ustaw").classList.remove("on");rysuj();subtitle()}
   catch(e){const b=g("u_blad");b.textContent=e.message;b.style.display=""}};
 init();
