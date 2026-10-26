@@ -36,7 +36,7 @@ select{width:100%;font:inherit;color:var(--tx);background:var(--in);border:1px s
 <label>Hasło</label><input id="ha" type="password" autocomplete="current-password">
 <div class="m"><button class="btn" id="zaloguj">Wejdź</button><span class="b bad" id="lblad" style="display:none"></span></div></div></div>
 
-<header class="hdr"><div><h1>Publikator</h1><div class="sub" id="sub">ładuję…</div></div><button class="gear" id="gear">⚙ Ustawienia</button></header>
+<header class="hdr"><div><h1>Publikator</h1><div class="sub" id="sub">ładuję…</div></div><button class="gear" id="dzwonek" style="display:none">🔔 Powiadomienia</button><button class="gear" id="gear" style="margin-left:0">⚙ Ustawienia</button></header>
 <nav id="nav"></nav><main id="main"></main>
 
 <div class="ekran" id="ustaw"><div class="w">
@@ -61,7 +61,7 @@ select{width:100%;font:inherit;color:var(--tx);background:var(--in);border:1px s
    konfiguracja.js definiuje window.FIREBASE_CONFIG (publiczna konfiguracja aplikacji web Firebase, nie sekret). */
 const $=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e};
 const g=id=>document.getElementById(id);
-let D=[],cur=null,db=null,tPobrania="",oczekuje=0;
+let D=[],cur=null,db=null,tPobrania="",oczekuje=0,puls="";
 const SUB=[["yt-film","YouTube filmy"],["yt-short","YouTube shorty"],["tiktok","TikTok"],["insta","Instagram"]];
 let sub="yt-film";try{sub=localStorage.getItem("sub")||sub}catch(e){}
 const miniCache={};
@@ -120,13 +120,15 @@ function rysuj(){
   wys.length?wys.forEach(p=>main.append(karta(p,true,c))):main.append($("div","puste","Jeszcze nic tu nie wstawiono."))}
 function wiek(t){const min=Math.round((Date.now()-new Date(t))/60000);return isNaN(min)?"":min<2?"przed chwilą":min<90?min+" min temu":Math.round(min/60)+" h temu"}
 function subtitle(){const czeka=oczekuje&&new Date(tPobrania)<oczekuje;
-  g("sub").textContent=(tPobrania?"stan z komputera: "+kiedy(tPobrania)+" ("+wiek(tPobrania)+")":"brak danych z komputera")+(czeka?" • zmiana ustawień zapisana, czeka na komputer":"")}
+  const zywy=[tPobrania,puls].filter(Boolean).sort().pop();   /* ostatni znak życia komputera: zrzut albo puls */
+  g("sub").textContent=(zywy?"komputer odpowiedział: "+kiedy(zywy)+" ("+wiek(zywy)+")":"brak danych z komputera")+(czeka?" • zmiana ustawień zapisana, czeka na komputer":"")}
 function start(){
   db=firebase.firestore();
   db.collection("stan").doc("aktualny").onSnapshot(s=>{
     if(s.exists){const st=JSON.parse(s.data().json);D=st.kanaly;tPobrania=st.t;if(!cur||!D.find(x=>x.id===cur))cur=D[0]&&D[0].id}
     subtitle();if(!g("ustaw").classList.contains("on"))rysuj()},
     e=>{g("sub").textContent="błąd odczytu: "+e.code});
+  db.collection("stan").doc("puls").onSnapshot(s=>{if(s.exists){puls=s.data().t;subtitle()}},()=>{});
   setInterval(subtitle,30000)}
 /* ---------- logowanie ---------- */
 function init(){
@@ -183,5 +185,6 @@ g("u_zapisz").onclick=async()=>{
     c.planer={...c.planer,strefa,zapas_dni:z,godziny:{film,short:shorty}};
     oczekuje=Date.now();g("ustaw").classList.remove("on");rysuj();subtitle()}
   catch(e){const b=g("u_blad");b.textContent=e.message;b.style.display=""}};
+if(window.Android&&Android.powiadomienia){g("dzwonek").style.display="";g("dzwonek").onclick=()=>Android.powiadomienia()}
 init();
 </script></body></html>
