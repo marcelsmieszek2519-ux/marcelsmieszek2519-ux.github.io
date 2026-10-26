@@ -1,0 +1,146 @@
+<!doctype html><html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#14161a">
+<title>Publikator</title><style>
+:root{--bg:#14161a;--panel:#1d2026;--line:#2b2f38;--tx:#e8eaee;--mut:#8b92a1;--acc:#e8a33d;--ok:#5cb87a;--bad:#e06c6c;--in:#14161a}
+@media(prefers-color-scheme:light){:root{--bg:#f4f1ea;--panel:#fff;--line:#ddd7ca;--tx:#1b1d22;--mut:#6b6f78;--acc:#b8741a;--ok:#2f8a53;--bad:#b84a4a;--in:#faf8f3}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.45 system-ui,Segoe UI,sans-serif}
+header{padding:18px 16px 0;max-width:760px;margin:0 auto}.hdr{display:flex;align-items:flex-end;gap:10px}
+h1{font-size:20px;margin:0 0 2px}.sub{color:var(--mut);font-size:13px}
+nav{display:flex;gap:6px;overflow-x:auto;padding:14px 16px 0;max-width:760px;margin:0 auto}
+nav button{flex:none;background:none;border:1px solid var(--line);color:var(--mut);padding:8px 14px;border-radius:999px;font:inherit;font-size:14px}
+nav button.on{background:var(--acc);border-color:var(--acc);color:#1b1305;font-weight:600}
+main{max-width:760px;margin:0 auto;padding:6px 16px 60px}
+h2{font-size:12px;text-transform:uppercase;letter-spacing:1.2px;color:var(--mut);margin:26px 0 10px;font-weight:600}
+.k{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px}
+.t{font-weight:600;word-break:break-word}.m{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;align-items:center}
+.b{font-size:12px;padding:2px 9px;border-radius:999px;border:1px solid var(--line);color:var(--mut)}
+.b.ok{color:var(--ok);border-color:var(--ok)}.b.pub{color:var(--acc);border-color:var(--acc)}.b.bad{color:var(--bad);border-color:var(--bad)}
+.btn{font:inherit;font-size:14px;color:var(--acc);text-decoration:none;border:1px solid var(--acc);background:none;padding:6px 12px;border-radius:8px}
+.btn.m2{padding:3px 9px;font-size:13px}.btn.r{margin-left:auto}
+.puste{color:var(--mut);font-size:14px;padding:6px 2px}.hint{font-size:12px;color:var(--mut);margin-top:4px}
+.ekran{position:fixed;inset:0;background:var(--bg);overflow:auto;display:none;z-index:5}
+.ekran.on{display:block}.ekran .w{max-width:620px;margin:0 auto;padding:18px 16px 60px}
+label{display:block;font-size:13px;color:var(--mut);margin:14px 0 4px}
+input{width:100%;font:inherit;color:var(--tx);background:var(--in);border:1px solid var(--line);border-radius:8px;padding:10px}
+.sub2{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 0}.sub2 button{background:none;border:0;border-bottom:2px solid transparent;color:var(--mut);padding:6px 4px;margin-right:10px;font:inherit;font-size:14px}
+.sub2 button.on{color:var(--tx);border-bottom-color:var(--acc);font-weight:600}
+.k.z{display:flex;gap:12px}.k.z .im{flex:none;width:112px;height:63px;border-radius:8px;background:var(--line);object-fit:cover;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:11px}
+.k.z .tr{flex:1;min-width:0}.gear{background:none;border:1px solid var(--line);color:var(--mut);border-radius:8px;padding:5px 10px;font:inherit;font-size:13px;margin-left:auto}
+</style></head><body>
+<div class="ekran" id="login"><div class="w"><h1>Publikator</h1>
+<label>E-mail</label><input id="em" type="email" autocomplete="username">
+<label>Hasło</label><input id="ha" type="password" autocomplete="current-password">
+<div class="m"><button class="btn" id="zaloguj">Wejdź</button><span class="b bad" id="lblad" style="display:none"></span></div></div></div>
+
+<header class="hdr"><div><h1>Publikator</h1><div class="sub" id="sub">ładuję…</div></div><button class="gear" id="gear">⚙ Ustawienia</button></header>
+<nav id="nav"></nav><main id="main"></main>
+
+<div class="ekran" id="ustaw"><div class="w">
+<h1 id="u_tytul">Ustawienia kanału</h1>
+<div class="hint">Zapisane tutaj ustawienia komputer pobierze, gdy będzie włączony (zwykle w ciągu kilku minut). Dotyczą filmów, które planer dopiero ułoży; filmy już wgrane zmienisz w YouTube Studio.</div>
+<label>Strefa czasowa widowni (np. America/New_York)</label><input id="u_strefa">
+<label>Zapas dni (0–14)</label><input id="u_zapas" type="number" min="0" max="14">
+<label>Godziny filmów w strefie widowni (po przecinku, np. 14:00, 19:00)</label><input id="u_film">
+<label>Godziny shortów (po przecinku, puste = brak)</label><input id="u_short">
+<div class="m"><button class="btn" id="u_zapisz">Zapisz</button><button class="btn" id="u_anuluj">Anuluj</button><span class="b bad" id="u_blad" style="display:none"></span></div>
+</div></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="konfiguracja.js"></script>
+<script>
+/* Widok tylko do odczytu + ustawienia. Dane: Firestore (stan/aktualny, mini/<id>, ustawienia/<kanal>).
+   konfiguracja.js definiuje window.FIREBASE_CONFIG (publiczna konfiguracja aplikacji web Firebase, nie sekret). */
+const $=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e};
+const g=id=>document.getElementById(id);
+let D=[],cur=null,db=null,tPobrania="";
+const SUB=[["yt-film","YouTube filmy"],["yt-short","YouTube shorty"],["tiktok","TikTok"],["insta","Instagram"]];
+let sub="yt-film";try{sub=localStorage.getItem("sub")||sub}catch(e){}
+const miniCache={};
+function kiedy(s){if(!s)return"";const d=new Date(s);return isNaN(d)?s:d.toLocaleString("pl-PL",{dateStyle:"medium",timeStyle:"short"})}
+function pasuje(p,s){const pl=p.platformy||[];
+  if(s==="yt-film")return pl.includes("youtube")&&p.typ!=="short";
+  if(s==="yt-short")return pl.includes("youtube")&&p.typ==="short";
+  if(s==="tiktok")return pl.includes("tiktok");
+  return pl.includes("instagram")}
+function czasStrefa(iso,strefa){const d=new Date(iso);if(isNaN(d))return"";
+  try{return d.toLocaleString("pl-PL",{timeZone:strefa,weekday:"short",hour:"2-digit",minute:"2-digit"})+" ("+strefa.split("/").pop().replace("_"," ")+")"}catch(e){return""}}
+function link(t,u){const a=$("a","btn m2",t);a.href=u;a.target="_blank";a.rel="noopener";return a}
+function miniatura(p){
+  const d=$("div","im","brak miniatury");if(!p.mini)return d;
+  const wstaw=b64=>{const i=document.createElement("img");i.className="im";i.alt="";i.src="data:image/jpeg;base64,"+b64;d.replaceWith(i)};
+  if(miniCache[p.mini])wstaw(miniCache[p.mini]);
+  else db.collection("mini").doc(p.mini).get().then(s=>{if(s.exists){miniCache[p.mini]=s.data().b64;wstaw(s.data().b64)}}).catch(()=>{});
+  return d}
+function karta(p,wys,c){
+  const k=$("div","k z");k.append(miniatura(p));const tr=$("div","tr");k.append(tr);
+  tr.append($("div","t",p.tytul));const m=$("div","m");tr.append(m);const strefa=c.planer.strefa;
+  if(!wys){
+    if(p.wstrzymany)m.append($("span","b","wstrzymany"));
+    if(p.slot_utc)m.append($("span","b pub","termin: "+czasStrefa(p.slot_utc,strefa)));
+    else if(p.kiedy)m.append($("span","b","wyślę: "+kiedy(p.kiedy)));
+    else m.append($("span","b","w puli, bez terminu"));
+    const yt=(p.stan||{}).youtube;
+    if(yt&&yt.id){m.append($("span","b ok","✓ wgrany na YouTube"));if(yt.url)m.append(link("Studio",yt.url))}
+  }else{
+    const yt=(p.stan||{}).youtube,tt=(p.stan||{}).tiktok;
+    if(sub.startsWith("yt")&&yt){
+      if(yt.id&&p.premiera){const przyszla=new Date(p.premiera)>new Date();
+        m.append($("span","b "+(przyszla?"":"ok"),przyszla?"prywatny, zaplanowany: "+czasStrefa(p.premiera,strefa):"opublikowany "+czasStrefa(p.premiera,strefa)))}
+      else m.append($("span","b "+(p.widocznosc==="public"?"pub":""),p.widocznosc==="public"?"publiczny":p.widocznosc==="unlisted"?"niepubliczny":"prywatny"));
+      if(yt.id){m.append(link("Studio","https://studio.youtube.com/video/"+yt.id+"/edit"));
+        m.append(link("Statystyki","https://studio.youtube.com/video/"+yt.id+"/analytics/tab-overview/period-default"))}}
+    if(sub==="tiktok"&&tt){
+      m.append($("span","b "+(tt.id?"ok":"bad"),tt.id?"✓ szkic w aplikacji TikTok"+(tt.wyslano?" ("+kiedy(tt.wyslano)+")":""):"✗ nie wysłano"))}
+  }
+  return k}
+function rysuj(){
+  const nav=g("nav"),main=g("main");nav.replaceChildren();main.replaceChildren();
+  D.forEach(c=>{const b=$("button",c.id===cur?"on":"",c.nazwa);b.onclick=()=>{cur=c.id;rysuj()};nav.append(b)});
+  const c=D.find(x=>x.id===cur);if(!c){main.append($("div","puste","Brak danych. Komputer jeszcze nic nie wysłał do chmury."));return}
+  const sb=$("div","sub2");SUB.forEach(([id,nazwa])=>{const b=$("button",id===sub?"on":"",nazwa);b.onclick=()=>{sub=id;try{localStorage.setItem("sub",id)}catch(e){}rysuj()};sb.append(b)});main.append(sb);
+  const u=c.planer,godz=t=>(u.godziny[t]||[]).join(", ")||"brak";
+  main.append($("div","hint","Zapas: "+u.zapas_dni+" dni • strefa "+u.strefa+" • filmy: "+godz("film")+" • shorty: "+godz("short")));
+  if(sub==="insta")main.append($("div","puste","Instagram dodamy na końcu."));
+  const czeka=c.czeka.filter(p=>pasuje(p,sub)).sort((a,b)=>(a.slot_utc||a.kiedy||"~").localeCompare(b.slot_utc||b.kiedy||"~"));
+  const pula=(c.pula||[]).filter(p=>pasuje(p,sub));
+  main.append($("h2","","Czekają na wstawienie ("+(czeka.length+pula.length)+")"));
+  if(czeka.length+pula.length){czeka.forEach(p=>main.append(karta(p,false,c)));pula.forEach(p=>main.append(karta(p,false,c)))}
+  else main.append($("div","puste","Nic nie czeka."));
+  const wys=c.wyslane.filter(p=>pasuje(p,sub));
+  main.append($("h2","","Wstawione ("+wys.length+")"));
+  wys.length?wys.forEach(p=>main.append(karta(p,true,c))):main.append($("div","puste","Jeszcze nic tu nie wstawiono."))}
+function wiek(t){const min=Math.round((Date.now()-new Date(t))/60000);return isNaN(min)?"":min<2?"przed chwilą":min<90?min+" min temu":Math.round(min/60)+" h temu"}
+function subtitle(){g("sub").textContent=tPobrania?"stan z komputera: "+kiedy(tPobrania)+" ("+wiek(tPobrania)+")":"brak danych z komputera"}
+function start(){
+  db=firebase.firestore();
+  db.collection("stan").doc("aktualny").onSnapshot(s=>{
+    if(s.exists){const st=JSON.parse(s.data().json);D=st.kanaly;tPobrania=st.t;if(!cur||!D.find(x=>x.id===cur))cur=D[0]&&D[0].id}
+    subtitle();if(!g("ustaw").classList.contains("on"))rysuj()},
+    e=>{g("sub").textContent="błąd odczytu: "+e.code});
+  setInterval(subtitle,30000)}
+/* ---------- logowanie ---------- */
+function init(){
+  if(!window.FIREBASE_CONFIG){g("sub").textContent="brak konfiguracji Firebase (konfiguracja.js)";return}
+  firebase.initializeApp(window.FIREBASE_CONFIG);
+  firebase.auth().onAuthStateChanged(u=>{if(u){g("login").classList.remove("on");start()}else g("login").classList.add("on")});
+  g("zaloguj").onclick=async()=>{try{await firebase.auth().signInWithEmailAndPassword(g("em").value.trim(),g("ha").value);g("lblad").style.display="none"}
+    catch(e){const b=g("lblad");b.textContent="nie udało się zalogować";b.style.display=""}}}
+/* ---------- ustawienia ---------- */
+g("gear").onclick=()=>{const c=D.find(x=>x.id===cur);if(!c)return;const u=c.planer;
+  g("u_tytul").textContent="Ustawienia • "+c.nazwa;g("u_strefa").value=u.strefa;g("u_zapas").value=u.zapas_dni;
+  g("u_film").value=(u.godziny.film||[]).join(", ");g("u_short").value=(u.godziny.short||[]).join(", ");
+  g("u_blad").style.display="none";g("ustaw").classList.add("on");window.scrollTo(0,0)};
+g("u_anuluj").onclick=()=>{g("ustaw").classList.remove("on");rysuj()};
+g("u_zapisz").onclick=async()=>{
+  try{const z=+g("u_zapas").value;if(!(z>=0&&z<=14))throw new Error("zapas 0-14 dni");
+    const lista=t=>g(t).value.split(",").map(x=>x.trim()).filter(Boolean);
+    for(const t of[...lista("u_film"),...lista("u_short")])if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(t))throw new Error("zła godzina: "+t);
+    await db.collection("ustawienia").doc(cur).set({strefa:g("u_strefa").value.trim(),zapas_dni:z,godziny_film:lista("u_film").join(","),
+      godziny_short:lista("u_short").join(","),zmieniono:new Date().toISOString().replace(/\.\d+Z$/,"Z")});
+    g("ustaw").classList.remove("on");rysuj()}
+  catch(e){const b=g("u_blad");b.textContent=e.message;b.style.display=""}};
+init();
+</script></body></html>

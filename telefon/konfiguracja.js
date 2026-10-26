@@ -1,0 +1,1 @@
+window.FIREBASE_CONFIG = {"apiKey":"AIzaSyAMfiFLBv38fxHkW7S1FOgk1oIFzOFhTRQ","authDomain":"publikator-telefon.firebaseapp.com","projectId":"publikator-telefon","storageBucket":"publikator-telefon.firebasestorage.app","messagingSenderId":"197200318563","appId":"1:197200318563:web:e5729ea4aec909a163a856"};
