@@ -31,7 +31,7 @@ header{position:sticky;top:0;z-index:4;background:var(--bg);padding:14px 0 10px;
 .kanaly::-webkit-scrollbar{display:none}
 .kanaly button{flex:none;border:1px solid var(--linia);background:var(--karta);border-radius:999px;padding:9px 16px;min-height:42px;cursor:pointer}
 .kanaly button.on{background:var(--acc);border-color:var(--acc);color:var(--acc-tx);font-weight:700}
-.zakl{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:10px;background:var(--linia);padding:4px;border-radius:14px}
+.zakl{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:10px;background:var(--linia);padding:4px;border-radius:14px}
 .zakl button{border:0;background:transparent;border-radius:10px;padding:10px 2px;min-height:44px;font-size:14px;color:var(--mut);cursor:pointer;line-height:1.15}
 .zakl button.on{background:var(--karta);color:var(--tx);font-weight:700;box-shadow:var(--cien)}
 
@@ -113,6 +113,21 @@ input:focus,select:focus,textarea:focus{outline:3px solid var(--acc-tlo);border-
 .postep{height:10px;background:var(--linia);border-radius:6px;overflow:hidden;margin-top:12px;display:none}.postep i{display:block;height:100%;width:0;background:var(--acc)}
 .sr{position:absolute;left:-9999px}
 
+.dzis{border:2px solid var(--acc);background:var(--acc-tlo);border-radius:16px;padding:14px;margin-bottom:12px}
+.dzis h3{margin:0 0 6px;font-size:17px;color:var(--acc)}
+.dzis-w{padding:10px 0 4px;border-top:1px solid var(--linia)}.dzis-w:first-of-type{border-top:0}
+.dzis-w b{display:block;font-size:16px}
+.podpis{font-size:15px;background:var(--karta);border-radius:10px;padding:9px 11px;margin:8px 0 10px;white-space:pre-wrap;word-break:break-word;max-height:7.5em;overflow:auto}
+.zapas{font-size:14px;margin-top:6px;font-weight:600}.zapas.ok{color:var(--ok)}.zapas.wrt{color:var(--wrt)}.zapas.bad{color:var(--bad)}
+.kanalbox{margin:10px 0 0}.kanalbox .hint{margin:0 0 6px}
+.baner{border:1.5px solid var(--acc);background:var(--acc-tlo);border-radius:16px;padding:12px 14px;margin-bottom:12px}
+.baner b{display:block;margin-bottom:2px}.baner .akcje{margin-top:10px}
+.przel{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--linia);font-size:16.5px;min-height:52px;cursor:pointer}
+.przel:last-child{border-bottom:0}.przel input{flex:none;margin:0}
+
+.baner{font-size:15.5px}
+@media(max-width:520px){.plan{flex-direction:column;align-items:stretch}.plan>.btn{width:100%}}
+
 .toast{position:fixed;left:50%;bottom:max(24px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:30;background:var(--tx);color:var(--bg);
  padding:12px 18px;border-radius:14px;font-size:15.5px;box-shadow:0 6px 24px rgba(0,0,0,.3);max-width:92vw;text-align:center}
 details{margin-top:12px}summary{cursor:pointer;font-weight:600;color:var(--acc);padding:6px 0}
@@ -148,6 +163,27 @@ input[type=file]{width:100%;font-size:15px;padding:10px;border:1.5px dashed var(
 <div class="blad" id="u_blad" style="display:none"></div>
 </div></div>
 <div class="pasek"><div class="w"><button class="btn cichy" id="u_anuluj">Anuluj</button><button class="btn pelny" id="u_zapisz">Zapisz plan</button></div></div></div>
+<div class="ekran" id="powiadom"><div class="tresc"><div class="w">
+<h1>Powiadomienia</h1>
+<div class="sekcja" id="pw_konto"><h3>Konto do powiadomień</h3>
+<p class="opis" id="pw_konto_txt"></p>
+<div id="pw_login"><label class="e" for="pw_em">E-mail</label><input id="pw_em" type="email" inputmode="email" autocomplete="username">
+<label class="e" for="pw_ha">Hasło</label><input id="pw_ha" type="password" autocomplete="current-password">
+<div class="blad" id="pw_blad" style="display:none"></div>
+<div class="akcje" style="margin-top:12px"><button class="btn pelny" id="pw_zaloguj">Zaloguj i włącz powiadomienia</button></div></div></div>
+<div class="sekcja" id="pw_opcje"><h3>Co mam Ci przypominać?</h3>
+<label class="przel"><input type="checkbox" data-k="tiktok">Czas publikacji na TikToku</label>
+<div style="padding:10px 0 4px"><label class="e" for="pw_przed" style="margin-top:0">Kiedy przypomnieć o TikToku</label>
+<select id="pw_przed"><option value="0">Dokładnie o godzinie publikacji</option><option value="10">10 minut wcześniej</option><option value="30">30 minut wcześniej</option></select></div>
+<label class="przel"><input type="checkbox" data-k="bledy">Błędy wysyłki</label>
+<label class="przel"><input type="checkbox" data-k="komputer">Komputer przestał odpowiadać</label>
+<label class="przel"><input type="checkbox" data-k="zapas">Kończą się filmy w kolejce</label>
+<label class="przel"><input type="checkbox" data-k="wyslano">Każda udana wysyłka (więcej powiadomień)</label></div>
+<div class="sekcja"><h3>Sprawdź, czy działa</h3>
+<p class="opis">Dotknij, żeby zobaczyć, czy telefon pokazuje wyskakujący baner z dźwiękiem. Jeśli nie, otwórz ustawienia dźwięku i włącz „Wyskakujące” oraz dźwięk.</p>
+<div class="akcje"><button class="btn pelny" id="pw_test">Wyślij testowe powiadomienie</button><button class="btn cichy" id="pw_system">Ustawienia dźwięku w telefonie</button></div></div>
+</div></div>
+<div class="pasek"><div class="w"><button class="btn pelny" id="pw_zamknij">Gotowe</button></div></div></div>
 <div class="ekran" id="login"><div class="tresc"><div class="w logowanie"><h1>Publikator</h1>
 <p>Zaloguj się, żeby zobaczyć swoje filmy i plan publikacji.</p>
 <label class="e" for="em">E-mail</label><input id="em" type="email" autocomplete="username" inputmode="email">
@@ -165,8 +201,8 @@ const g=id=>document.getElementById(id);
 const MOJA="Europe/Warsaw";   /* czas „u Ciebie” */
 const APP={D:[],cur:null,sub:"yt-film",Z:[],zywy:"",lokalny:false,wiecejWys:15,hooki:{}};
 try{APP.sub=localStorage.getItem("sub")||APP.sub}catch(e){}
-if(!["yt-film","yt-short","tiktok"].includes(APP.sub))APP.sub="yt-film";
-const SUB=[["yt-film","Filmy YT"],["yt-short","Shorty YT"],["tiktok","TikTok"]];   /* Instagram dodamy, gdy będzie działał */
+if(!["yt-film","yt-short","tiktok","insta"].includes(APP.sub))APP.sub="yt-film";
+const SUB=[["yt-film","Filmy YT"],["yt-short","Shorty YT"],["tiktok","TikTok"],["insta","Instagram"]];
 
 /* ---------- strefy czasowe (wybór z opisami) ---------- */
 const STREFY=[
@@ -221,9 +257,9 @@ function status(p,tryb,c){
   const y=st.youtube;
   if(!y||!y.id)return{k:"szary",ik:"⏳",t:"Czeka na wysłanie na YouTube",d:"Wgra się sam, gdy komputer będzie włączony. Publikacja: "+k+usa+"."};
   const pr=p.premiera?new Date(p.premiera):null;
-  if(pr&&pr>new Date())return{k:"info",ik:"🗓",t:"Zaplanowany na YouTube",d:"Opublikuje się sam "+terminTxt(pr)+" ("+godz(pr,tz)+" – "+krotkaStrefa(tz)+")."};
+  if(pr&&pr>new Date())return{k:"info",ik:"🗓",t:"Zaplanowany na YouTube",d:"Opublikuje się sam "+terminTxt(pr)+" ("+godz(pr,tz)+" – "+krotkaStrefa(tz)+"). Widoczność lub godzinę zmienisz w YouTube Studio (przycisk poniżej)."};
   if(pr||p.widocznosc==="public")return{k:"ok",ik:"✅",t:"Opublikowany na YouTube",d:pr?terminTxt(pr):""};
-  return{k:"szary",ik:"🔒",t:"Prywatny na YouTube",d:"Widzisz go tylko Ty."}}
+  return{k:"szary",ik:"🔒",t:"Prywatny na YouTube",d:"Widzisz go tylko Ty. Widoczność zmienisz w YouTube Studio (przycisk poniżej)."}}
 function miniatura(p){const e=APP.hooki.mini&&APP.hooki.mini(p);return e||$("div","im","Brak miniatury")}
 function przycisk(tekst,href,klasa){const a=$("a","btn "+(klasa||""),tekst);a.href=href;a.target="_blank";a.rel="noopener";return a}
 function karta(p,tryb,c){
@@ -236,14 +272,43 @@ function karta(p,tryb,c){
   if(a.childNodes.length)k.append(a);
   return k}
 
-/* ---------- plan publikacji (karta u góry zakładki) ---------- */
+/* ---------- plan publikacji, zapas, kanał, „dziś do zrobienia” ---------- */
+const typPlanu=()=>APP.sub==="yt-film"?"film":"short";
+function zapasTekst(c,typ){const u=c.planer,dz=(u.godziny[typ]||[]).length;if(!dz)return null;
+  const ile=c.czeka.filter(p=>(p.typ||"film")===typ).length+(c.pula||[]).filter(p=>(p.typ||"film")===typ).length,dni=ile/dz;
+  const slowo=typ==="film"?odm(ile,["film","filmy","filmów"]):odm(ile,["short","shorty","shortów"]),pelne=Math.floor(dni);
+  return{k:dni<1?"bad":dni<2?"wrt":"ok",t:"W kolejce: "+ile+" "+slowo+(ile?" – starczy na "+(dni<1?"mniej niż dzień":"ok. "+pelne+" "+odm(pelne,["dzień","dni","dni"])):" – kolejka jest pusta")}}
 function planKarta(c){
-  const u=c.planer,typ=APP.sub==="yt-film"?"film":"short",lista=(u.godziny[typ]||[]).slice().sort(),box=$("div","plan"),tx=$("div","tx");
-  if(!lista.length){tx.append($("b","","Nie ustawiono godzin publikacji"),$("small","","Ustaw plan, a aplikacja sama poukłada kolejkę."))}
-  else{const pl=lista.map(h=>{const x=polskaGodz(u.strefa,h);return x?x.g:h});
-    tx.append($("b","",lista.length+" "+(typ==="film"?odm(lista.length,["film","filmy","filmów"]):odm(lista.length,["short","shorty","shortów"]))+" dziennie: "+pl.join(", ")),
-      $("small","","To godziny u Ciebie. W USA: "+lista.join(", ")+" ("+krotkaStrefa(u.strefa)+"). Wgrywamy "+u.zapas_dni+" "+odm(u.zapas_dni,["dzień","dni","dni"])+" do przodu."))}
+  const u=c.planer,typ=typPlanu(),tt=APP.sub==="tiktok",lista=(u.godziny[typ]||[]).slice().sort(),box=$("div","plan"),tx=$("div","tx");
+  if(!lista.length){tx.append($("b","",tt?"Nie ustawiono godzin dla TikToka":"Nie ustawiono godzin publikacji"),$("small","","Ustaw plan, a aplikacja sama poukłada kolejkę."))}
+  else{const pl=lista.map(h=>{const x=polskaGodz(u.strefa,h);return x?x.g:h}),n=lista.length;
+    tx.append($("b","",tt?"Na TikToku: "+n+" wideo dziennie ("+pl.join(", ")+")":n+" "+(typ==="film"?odm(n,["film","filmy","filmów"]):odm(n,["short","shorty","shortów"]))+" dziennie: "+pl.join(", ")),
+      $("small","",tt?"TikTok dostaje te same krótkie filmy co YouTube Shorts, więc godziny są wspólne. Szkic wysyłamy z wyprzedzeniem, a Ty publikujesz go ręcznie o tej godzinie."
+        :"To godziny u Ciebie. W USA: "+lista.join(", ")+" ("+krotkaStrefa(u.strefa)+"). Wgrywamy "+u.zapas_dni+" "+odm(u.zapas_dni,["dzień","dni","dni"])+" do przodu."));
+    const z=zapasTekst(c,typ);if(z)tx.append($("div","zapas "+z.k,z.t))}
   const b=$("button","btn cichy",lista.length?"Zmień":"Ustaw");b.style.flex="none";b.onclick=()=>otworzUstawienia(c);box.append(tx,b);return box}
+function kanalKarta(c){const l=c.linki||{},a=$("div","akcje"),tt=APP.sub==="tiktok";
+  if(tt){if(l.tiktok)a.append(przycisk("Profil na TikToku",l.tiktok,"cichy"));a.append(przycisk("Statystyki (TikTok Studio)","https://www.tiktok.com/tiktokstudio","cichy"))}
+  else if(l.yt_studio){a.append(przycisk("Wszystkie filmy kanału",l.yt_studio+(l.yt_studio.includes("/channel/")?"/videos/upload":""),"cichy"),
+    przycisk("Statystyki kanału",l.yt_studio+(l.yt_studio.includes("/channel/")?"/analytics/tab-overview/period-default":""),"cichy"))}
+  if(!a.childNodes.length)return null;const box=$("div","kanalbox");
+  box.append($("div","hint","Co naprawdę jest na kanale (otworzy się w "+(tt?"TikToku":"YouTube Studio")+"):"),a);return box}
+function zrobione(){try{return JSON.parse(localStorage.getItem("zrobione")||"[]")}catch(e){return[]}}
+function oznaczZrobione(id){try{const z=zrobione();z.push(id);localStorage.setItem("zrobione",JSON.stringify(z.slice(-200)))}catch(e){}}
+function kopiuj(txt){if(navigator.clipboard&&navigator.clipboard.writeText)return navigator.clipboard.writeText(txt);
+  return new Promise((ok,nie)=>{try{const t=document.createElement("textarea");t.value=txt;t.style.position="fixed";t.style.opacity="0";document.body.append(t);t.select();
+    document.execCommand("copy")?ok():nie();t.remove()}catch(e){nie(e)}})}
+function dzisKarta(c){const teraz=Date.now(),zr=zrobione(),lista=[];
+  [...c.czeka,...c.wyslane].forEach(p=>{const tk=(p.stan||{}).tiktok,t=termin(p);if(!tk||!tk.id||!t||zr.includes(c.id+"/"+p.id))return;
+    const d=t-teraz;if(d>24*36e5||d<-24*36e5)return;lista.push([t,p])});
+  if(!lista.length)return null;lista.sort((a,b)=>a[0]-b[0]);
+  const box=$("div","dzis");box.append($("h3","","Dziś do zrobienia"));
+  lista.forEach(([t,p])=>{const r=$("div","dzis-w"),a=$("div","akcje"),podpis=p.podpis||p.tytul;
+    r.append($("b","",(t<new Date()?"Czas minął: opublikuj na TikToku (":"Opublikuj na TikToku ")+terminTxt(t)+(t<new Date()?")":"")),$("div","podpis",podpis));
+    const k=$("button","btn pelny","Kopiuj podpis");k.onclick=()=>kopiuj(podpis).then(()=>toast("Podpis skopiowany. Wklej go w TikToku."),()=>toast("Nie udało się skopiować. Zaznacz tekst ręcznie."));
+    const z=$("button","btn cichy","Zrobione");z.onclick=()=>{oznaczZrobione(c.id+"/"+p.id);rysuj()};
+    a.append(k,przycisk("Otwórz TikToka","https://www.tiktok.com/","cichy"),z);r.append(a);box.append(r)});
+  return box}
 
 /* ---------- życie komputera (kropka w nagłówku) ---------- */
 function odswiezZycie(){const k=g("kropka"),t=g("zycieTxt");if(!k)return;
@@ -263,8 +328,10 @@ function rysuj(){
   odswiezZycie();
   const c=APP.D.find(x=>x.id===APP.cur);
   if(!c){main.append(pusty("Brak danych","Gdy komputer wyśle pierwszy raport, kanały pojawią się tutaj."));return}
+  if(APP.hooki.baner){const bn=APP.hooki.baner();if(bn)main.append(bn)}
   if(APP.sub==="insta"){main.append(pusty("Instagram dodamy na końcu","Do publikowania na Instagramie potrzebne jest konto Twórca. Na razie pracujemy na YouTube i TikToku."));return}
-  main.append(planKarta(c));
+  const dz=dzisKarta(c);if(dz)main.append(dz);
+  main.append(planKarta(c));const kk=kanalKarta(c);if(kk)main.append(kk);
   const czeka=c.czeka.filter(p=>pasuje(p,APP.sub)).sort((a,b)=>(termin(a)||1e15)-(termin(b)||1e15)),pula=(c.pula||[]).filter(p=>pasuje(p,APP.sub));
   main.append($("div","dzien","Czekają na publikację ("+(czeka.length+pula.length)+")"));
   if(!czeka.length&&!pula.length)main.append(pusty("Nic tu jeszcze nie czeka","Gdy pojawi się nowy film, aplikacja sama ułoży go w wolnym terminie."));
@@ -346,9 +413,36 @@ function start(){
     e=>{g("zycieTxt").textContent="Nie mogę pobrać danych ("+e.code+")";g("kropka").className="kropka bad"});
   db.collection("stan").doc("puls").onSnapshot(s=>{if(s.exists){PULS=s.data().t;przeliczZywy()}},()=>{});
   setInterval(odswiezZycie,30000)}
+/* ---------- powiadomienia: ustawienia przechowuje aplikacja Android (most `Android`) ---------- */
+const A=window.Android&&Android.ustawienia?Android:null;
+const ustAndroid=()=>{try{return A?JSON.parse(A.ustawienia()):{}}catch(e){return{}}};
+APP.hooki.baner=()=>{if(!A||ustAndroid().email)return null;
+  const b=$("div","baner");b.append($("b","","Włącz powiadomienia"),document.createTextNode("Zaloguj się raz, a telefon przypomni Ci o publikacji na TikToku i ostrzeże o błędach, także gdy aplikacja jest zamknięta."));
+  const a=$("div","akcje"),p=$("button","btn pelny","Włącz powiadomienia");p.onclick=otworzPowiadomienia;a.append(p);b.append(a);return b};
+function otworzPowiadomienia(){
+  if(!A){toast("Powiadomienia działają tylko w aplikacji na telefonie.");return}
+  const u=ustAndroid(),zal=!!u.email;
+  g("pw_konto_txt").textContent=zal?"Zalogowano jako "+u.email+". Przypomnienia działają także wtedy, gdy aplikacja jest zamknięta.":"Zaloguj się tym samym e-mailem i hasłem co na stronie. Hasła nie zapamiętujemy, tylko bezpieczny token logowania.";
+  g("pw_login").style.display=zal?"none":"";g("pw_opcje").style.opacity=zal?"1":".5";
+  g("pw_em").value=u.email||"";g("pw_ha").value="";g("pw_blad").style.display="none";
+  document.querySelectorAll("#powiadom input[data-k]").forEach(i=>{i.checked=!!u[i.dataset.k];i.disabled=!zal});
+  g("pw_przed").value=String(u.przed||0);g("pw_przed").disabled=!zal;
+  g("powiadom").classList.add("on");g("powiadom").querySelector(".tresc").scrollTop=0}
+function initPowiadomien(){
+  if(!A){g("dzwonek").style.display="none";return}
+  g("dzwonek").style.display="";g("dzwonek").onclick=otworzPowiadomienia;
+  g("pw_zamknij").onclick=()=>{g("powiadom").classList.remove("on");rysuj()};
+  document.querySelectorAll("#powiadom input[data-k]").forEach(i=>i.onchange=()=>A.zapiszUstawienie(i.dataset.k,i.checked?"1":"0"));
+  g("pw_przed").onchange=()=>A.zapiszUstawienie("przed",g("pw_przed").value);
+  g("pw_test").onclick=()=>{A.testowe();toast("Wysłano testowe powiadomienie")};
+  g("pw_system").onclick=()=>A.systemowe();
+  window.wynikLogowania=(ok,msg)=>{g("pw_zaloguj").disabled=false;
+    if(ok){toast("Powiadomienia włączone");otworzPowiadomienia();rysuj()}else{const x=g("pw_blad");x.textContent=msg||"Nie udało się zalogować. Sprawdź e-mail i hasło.";x.style.display=""}};
+  g("pw_zaloguj").onclick=()=>{const e=g("pw_em").value.trim(),h=g("pw_ha").value;
+    if(!e||!h){const x=g("pw_blad");x.textContent="Wpisz e-mail i hasło.";x.style.display="";return}
+    g("pw_blad").style.display="none";g("pw_zaloguj").disabled=true;A.zaloguj(e,h)}}
 function init(){
-  initUstawienia();
-  if(window.Android&&Android.powiadomienia){g("dzwonek").style.display="";g("dzwonek").onclick=()=>Android.powiadomienia()}
+  initUstawienia();initPowiadomien();
   if(!window.FIREBASE_CONFIG){g("zycieTxt").textContent="Brak konfiguracji";return}
   firebase.initializeApp(window.FIREBASE_CONFIG);
   firebase.auth().onAuthStateChanged(u=>{if(u){g("login").classList.remove("on");start()}else g("login").classList.add("on")});
