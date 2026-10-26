@@ -128,6 +128,18 @@ input:focus,select:focus,textarea:focus{outline:3px solid var(--acc-tlo);border-
 .baner{font-size:15.5px}
 @media(max-width:520px){.plan{flex-direction:column;align-items:stretch}.plan>.btn{width:100%}}
 
+.wysylka{background:var(--info-tlo);color:var(--info);border-radius:16px;padding:12px 14px;margin-bottom:12px}
+.wysylka b{display:block;font-size:15.5px}.wysylka .tor{height:8px;background:var(--karta);border-radius:5px;overflow:hidden;margin-top:8px}
+.wysylka .tor i{display:block;height:100%;background:var(--info);width:0;transition:width .6s}
+.kd{background:var(--karta);border:1px solid var(--linia);border-radius:16px;padding:10px 14px;margin-bottom:10px;box-shadow:var(--cien)}
+.kdn{font-weight:700;margin-bottom:2px}.kdn::first-letter{text-transform:uppercase}
+.kw{display:flex;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--linia);font-size:15.5px;min-height:44px}
+.kw .kc{flex:none;width:52px;font-weight:700}.kw .ki{flex:none}.kw .kt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kw.wolny{color:var(--bad)}.kw.wolny .kt{font-weight:600}.kw.minal{color:var(--mut)}.kw.poza .kt{color:var(--info)}
+.kpods{border-radius:12px;padding:10px 12px;margin-bottom:12px;font-weight:600}.kpods.ok{background:var(--ok-tlo);color:var(--ok)}.kpods.wrt{background:var(--wrt-tlo);color:var(--wrt)}
+#dropper{position:fixed;inset:0;z-index:40;background:rgba(184,116,26,.93);color:#fff;display:none;align-items:center;justify-content:center;text-align:center;font-size:24px;font-weight:700;padding:24px}
+#dropper.on{display:flex}#dropper small{display:block;font-weight:400;font-size:16px;margin-top:10px}
+
 .toast{position:fixed;left:50%;bottom:max(24px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:30;background:var(--tx);color:var(--bg);
  padding:12px 18px;border-radius:14px;font-size:15.5px;box-shadow:0 6px 24px rgba(0,0,0,.3);max-width:92vw;text-align:center}
 details{margin-top:12px}summary{cursor:pointer;font-weight:600;color:var(--acc);padding:6px 0}
@@ -138,7 +150,7 @@ input[type=file]{width:100%;font-size:15px;padding:10px;border:1.5px dashed var(
 </style></head><body>
 <header><div class="w"><div class="gora">
 <div class="tyt"><h1>Publikator</h1></div>
-<div class="ikony"><button class="ikona" id="dzwonek" aria-label="Powiadomienia" title="Powiadomienia" style="display:none">🔔</button><button class="ikona" id="gear" aria-label="Plan publikacji" title="Plan publikacji">⚙️</button></div></div>
+<div class="ikony"><button class="ikona" id="dzwonek" aria-label="Powiadomienia" title="Powiadomienia" style="display:none">🔔</button><button class="ikona" id="kalendarz" aria-label="Kalendarz tygodnia" title="Kalendarz tygodnia">📅</button><button class="ikona" id="gear" aria-label="Plan publikacji" title="Plan publikacji">⚙️</button></div></div>
 <div class="zycie"><i class="kropka" id="kropka"></i><span id="zycieTxt">Łączę…</span></div>
 <div class="kanaly" id="kanaly"></div><div class="zakl" id="zakl"></div></div></header>
 <main class="w" id="main"></main>
@@ -163,6 +175,9 @@ input[type=file]{width:100%;font-size:15px;padding:10px;border:1.5px dashed var(
 <div class="blad" id="u_blad" style="display:none"></div>
 </div></div>
 <div class="pasek"><div class="w"><button class="btn cichy" id="u_anuluj">Anuluj</button><button class="btn pelny" id="u_zapisz">Zapisz plan</button></div></div></div>
+<div class="ekran" id="kal"><div class="tresc"><div class="w">
+<h1 id="kal_t">Kalendarz tygodnia</h1><div id="kal_tr"></div></div></div>
+<div class="pasek"><div class="w"><button class="btn pelny" id="kal_zamknij">Zamknij</button></div></div></div>
 <div class="ekran" id="powiadom"><div class="tresc"><div class="w">
 <h1>Powiadomienia</h1>
 <div class="sekcja" id="pw_konto"><h3>Konto do powiadomień</h3>
@@ -250,6 +265,7 @@ function status(p,tryb,c){
   if(p.wstrzymany)return{k:"wrt",ik:"⏸",t:"Wstrzymany",d:"Nie zostanie wysłany, dopóki go nie wznowisz."};
   if(tryb==="pula")return{k:"szary",ik:"🕓",t:"Gotowy, czeka na wolny termin",d:"Plan sam przydzieli mu godzinę."};
   if(APP.sub==="tiktok"){const tt=st.tiktok;
+    if(tt&&tt.id&&tt.potwierdzony===false)return{k:"szary",ik:"⏳",t:"Szkic wysłany, czekam na potwierdzenie TikToka",d:"Zwykle trwa to kilka minut."};
     if(tt&&tt.id)return t&&t<new Date()
       ?{k:"acc",ik:"📱",t:"Czas minął: opublikuj w aplikacji TikTok",d:"Szkic czeka w skrzynce TikToka (termin był "+k+")."}
       :{k:"info",ik:"📱",t:"Szkic czeka w aplikacji TikTok",d:"Opublikuj go ręcznie "+k+usa+"."};
@@ -299,7 +315,7 @@ function kopiuj(txt){if(navigator.clipboard&&navigator.clipboard.writeText)retur
   return new Promise((ok,nie)=>{try{const t=document.createElement("textarea");t.value=txt;t.style.position="fixed";t.style.opacity="0";document.body.append(t);t.select();
     document.execCommand("copy")?ok():nie();t.remove()}catch(e){nie(e)}})}
 function dzisKarta(c){const teraz=Date.now(),zr=zrobione(),lista=[];
-  [...c.czeka,...c.wyslane].forEach(p=>{const tk=(p.stan||{}).tiktok,t=termin(p);if(!tk||!tk.id||!t||zr.includes(c.id+"/"+p.id))return;
+  [...c.czeka,...c.wyslane].forEach(p=>{const tk=(p.stan||{}).tiktok,t=termin(p);if(!tk||!tk.id||tk.potwierdzony===false||!t||zr.includes(c.id+"/"+p.id))return;
     const d=t-teraz;if(d>24*36e5||d<-24*36e5)return;lista.push([t,p])});
   if(!lista.length)return null;lista.sort((a,b)=>a[0]-b[0]);
   const box=$("div","dzis");box.append($("h3","","Dziś do zrobienia"));
@@ -332,6 +348,8 @@ function rysuj(){
   const c=APP.D.find(x=>x.id===APP.cur);
   if(!c){main.append(pusty("Brak danych","Gdy komputer wyśle pierwszy raport, kanały pojawią się tutaj."));return}
   if(APP.hooki.baner){const bn=APP.hooki.baner();if(bn)main.append(bn)}
+  (c.wysylka||[]).forEach(x=>{const b=$("div","wysylka");b.append($("b","","Trwa wysyłanie na "+(x.platforma==="tiktok"?"TikToka":"YouTube")+": "+x.proc+"%"),document.createTextNode(x.tytul));
+    const tor=$("div","tor"),i=document.createElement("i");i.style.width=x.proc+"%";tor.append(i);b.append(tor);main.append(b)});
   if(APP.sub==="insta"){main.append(pusty("Instagram dodamy na końcu","Do publikowania na Instagramie potrzebne jest konto Twórca. Na razie pracujemy na YouTube i TikToku."));return}
   const dz=dzisKarta(c);if(dz)main.append(dz);
   main.append(planKarta(c));const kk=kanalKarta(c);if(kk)main.append(kk);
@@ -381,6 +399,7 @@ function otworzUstawienia(c){const u=c.planer;g("u_tytul").textContent="Plan pub
   ["film","short"].forEach(t=>{g("u_"+t+"_l").replaceChildren();(u.godziny[t]||[]).slice().sort().forEach(x=>wiersz("u_"+t+"_l",x));szybkie(t)});
   odswiezPodglad();g("u_blad").style.display="none";g("ustaw").classList.add("on");g("ustaw").querySelector(".tresc").scrollTop=0}
 function initUstawienia(){
+  initKalendarz();
   g("u_strefa").onchange=odswiezPodglad;
   g("u_film_d").onclick=()=>{wiersz("u_film_l","14:00");odswiezPodglad()};g("u_short_d").onclick=()=>{wiersz("u_short_l","14:00");odswiezPodglad()};
   g("u_minus").onclick=()=>{ustawZapas=Math.max(0,ustawZapas-1);odswiezPodglad()};g("u_plus").onclick=()=>{ustawZapas=Math.min(14,ustawZapas+1);odswiezPodglad()};
@@ -391,6 +410,33 @@ function initUstawienia(){
       await APP.hooki.zapiszUstawienia(APP.cur,dane);g("ustaw").classList.remove("on")}
     catch(e){const x=g("u_blad");x.textContent="Nie udało się zapisać: "+e.message;x.style.display=""}
     b.disabled=false}}
+
+/* ---------- kalendarz tygodnia: 7 dni, terminy zajęte i wolne ---------- */
+function slotMs(strefa,y,m,d,hhmm){const[h,mi]=hhmm.split(":").map(Number),guess=Date.UTC(y,m-1,d,h,mi);let t=guess-tzOff(strefa,guess);t=guess-tzOff(strefa,t);return t}
+function dniStrefy(strefa,n){const teraz=Date.now(),l=new Date(teraz+tzOff(strefa,teraz)),y=l.getUTCFullYear(),m=l.getUTCMonth(),d=l.getUTCDate(),wyn=[];
+  for(let i=0;i<n;i++){const x=new Date(Date.UTC(y,m,d+i));wyn.push([x.getUTCFullYear(),x.getUTCMonth()+1,x.getUTCDate()])}return wyn}
+function kalendarzRysuj(c){
+  const kont=g("kal_tr");kont.replaceChildren();g("kal_t").textContent="Kalendarz tygodnia • "+c.nazwa;
+  const u=c.planer,wsz=[...c.czeka,...c.wyslane],uzyte=new Set(),teraz=Date.now(),dni=dniStrefy(u.strefa,7),dzien=[];let wolne=0;
+  dni.forEach(([y,m,d])=>{const sl=[];
+    for(const typ of["film","short"])for(const h of(u.godziny[typ]||[]).slice().sort())sl.push([slotMs(u.strefa,y,m,d,h),typ]);
+    sl.sort((a,b)=>a[0]-b[0]);
+    const box=$("div","kd");box.append($("div","kdn",dzienNazwa(new Date(slotMs(u.strefa,y,m,d,"12:00")))));
+    sl.forEach(([t,typ])=>{const p=wsz.find(x=>!uzyte.has(x)&&(x.typ||"film")===typ&&x.slot_utc&&Math.abs(new Date(x.slot_utc)-t)<90000),
+      r=$("div","kw "+(p?"":t<teraz?"minal":"wolny"));
+      r.append($("span","kc",godz(new Date(t))),$("span","ki",typ==="film"?"🎬":"📱"));
+      if(p){uzyte.add(p);r.append($("span","kt",p.tytul))}else{if(t>=teraz)wolne++;r.append($("span","kt",t<teraz?"—":typ==="film"?"Wolny: brak filmu":"Wolny: brak shorta"))}
+      box.append(r)});
+    dzien.push([[y,m,d],box])});
+  wsz.filter(x=>!uzyte.has(x)&&x.slot_utc).forEach(x=>{const ms=new Date(x.slot_utc).getTime(),l=new Date(ms+tzOff(u.strefa,ms)),
+    kl=dzien.find(([[y,m,d]])=>y===l.getUTCFullYear()&&m===l.getUTCMonth()+1&&d===l.getUTCDate());
+    if(kl){const r=$("div","kw poza");r.append($("span","kc",godz(new Date(ms))),$("span","ki",(x.typ||"film")==="film"?"🎬":"📱"),$("span","kt","Poza planem: "+x.tytul));kl[1].append(r)}});
+  const pods=$("div","kpods "+(wolne?"wrt":"ok"),wolne?"W najbliższych 7 dniach brakuje filmów na "+wolne+" "+odm(wolne,["termin","terminy","terminów"])+".":"Wszystkie terminy na 7 dni są zajęte.");
+  kont.append(pods,$("div","hint","Godziny u Ciebie. 🎬 film, 📱 short (YouTube i TikTok). Wolne terminy zapełnią się z puli, gdy dodasz filmy."));
+  dzien.forEach(([,box])=>kont.append(box))}
+function initKalendarz(){
+  g("kalendarz").onclick=()=>{const c=APP.D.find(x=>x.id===APP.cur);if(!c)return;kalendarzRysuj(c);g("kal").classList.add("on");g("kal").querySelector(".tresc").scrollTop=0};
+  g("kal_zamknij").onclick=()=>g("kal").classList.remove("on")}
 
 /* ===== Widok na telefonie: dane z Firestore (zrzut stanu wysyła komputer), logowanie e-mailem ===== */
 let db=null,TPOB="",PULS="";
