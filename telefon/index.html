@@ -199,7 +199,7 @@ input[type=file]{width:100%;font-size:15px;padding:10px;border:1.5px dashed var(
 const $=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e};
 const g=id=>document.getElementById(id);
 const MOJA="Europe/Warsaw";   /* czas „u Ciebie” */
-const APP={D:[],cur:null,sub:"yt-film",Z:[],zywy:"",lokalny:false,wiecejWys:15,hooki:{}};
+const APP={D:[],cur:null,sub:"yt-film",Z:[],zywy:"",lokalny:false,wiecejWys:15,pulaPokaz:{},hooki:{}};
 try{APP.sub=localStorage.getItem("sub")||APP.sub}catch(e){}
 if(!["yt-film","yt-short","tiktok","insta"].includes(APP.sub))APP.sub="yt-film";
 const SUB=[["yt-film","Filmy YT"],["yt-short","Shorty YT"],["tiktok","TikTok"],["insta","Instagram"]];
@@ -312,11 +312,14 @@ function dzisKarta(c){const teraz=Date.now(),zr=zrobione(),lista=[];
 
 /* ---------- życie komputera (kropka w nagłówku) ---------- */
 function odswiezZycie(){const k=g("kropka"),t=g("zycieTxt");if(!k)return;
-  if(APP.lokalny){k.className="kropka ok";t.textContent="Aplikacja działa na tym komputerze";return}
+  if(APP.lokalny){k.className="kropka ok";t.textContent="Aplikacja działa na tym komputerze";dyskUwaga(k,t);return}
   if(!APP.zywy){k.className="kropka";t.textContent="Czekam na dane z komputera…";return}
   const min=(Date.now()-new Date(APP.zywy))/60000;
   k.className="kropka "+(min<15?"ok":min<180?"wrt":"bad");
-  t.textContent=min<15?"Komputer działa • "+wiek(APP.zywy):min<180?"Komputer odpowiedział "+wiek(APP.zywy):"Komputer nie odpowiada od "+wiek(APP.zywy).replace(" temu","")+": nowe filmy nie będą wysyłane"}
+  t.textContent=min<15?"Komputer działa • "+wiek(APP.zywy):min<180?"Komputer odpowiedział "+wiek(APP.zywy):"Komputer nie odpowiada od "+wiek(APP.zywy).replace(" temu","")+": nowe filmy nie będą wysyłane";
+  dyskUwaga(k,t)}
+function dyskUwaga(k,t){const gb=APP.D[0]&&APP.D[0].dysk_gb;
+  if(typeof gb==="number"&&gb<30){t.textContent+=" • Mało miejsca na dysku: "+Math.round(gb)+" GB";if(gb<10)k.className="kropka bad"}}
 
 /* ---------- rysowanie ---------- */
 function rysuj(){
@@ -337,7 +340,9 @@ function rysuj(){
   if(!czeka.length&&!pula.length)main.append(pusty("Nic tu jeszcze nie czeka","Gdy pojawi się nowy film, aplikacja sama ułoży go w wolnym terminie."));
   let ost="";czeka.forEach(p=>{const t=termin(p),kl=t?kluczDnia(t):"x";
     if(kl!==ost){ost=kl;const h=$("div","dzien",t?dzienNazwa(t):"Bez terminu");main.append(h)}main.append(karta(p,"czeka",c))});
-  if(pula.length){main.append($("div","dzien","Gotowe, bez terminu"));pula.forEach(p=>main.append(karta(p,"pula",c)))}
+  if(pula.length){const ile=APP.pulaPokaz[APP.sub]||10;main.append($("div","dzien","W puli, czeka na termin ("+pula.length+")"));
+    pula.slice(0,ile).forEach(p=>main.append(karta(p,"pula",c)));
+    if(pula.length>ile){const b=$("button","btn cichy wiecej","Pokaż kolejne ("+Math.min(20,pula.length-ile)+" z "+(pula.length-ile)+" pozostałych)");b.onclick=()=>{APP.pulaPokaz[APP.sub]=ile+20;rysuj()};main.append(b)}}
   const wys=c.wyslane.filter(p=>pasuje(p,APP.sub));
   main.append($("div","dzien","Już wysłane ("+wys.length+")"));
   if(!wys.length)main.append(pusty("Jeszcze nic nie wysłano","Tutaj zobaczysz filmy, które już poszły na platformę."));
