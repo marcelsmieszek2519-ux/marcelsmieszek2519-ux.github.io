@@ -55,7 +55,7 @@ input{width:100%;font:inherit;color:var(--tx);background:var(--in);border:1px so
    konfiguracja.js definiuje window.FIREBASE_CONFIG (publiczna konfiguracja aplikacji web Firebase, nie sekret). */
 const $=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e};
 const g=id=>document.getElementById(id);
-let D=[],cur=null,db=null,tPobrania="";
+let D=[],cur=null,db=null,tPobrania="",oczekuje=0;
 const SUB=[["yt-film","YouTube filmy"],["yt-short","YouTube shorty"],["tiktok","TikTok"],["insta","Instagram"]];
 let sub="yt-film";try{sub=localStorage.getItem("sub")||sub}catch(e){}
 const miniCache={};
@@ -113,7 +113,8 @@ function rysuj(){
   main.append($("h2","","Wstawione ("+wys.length+")"));
   wys.length?wys.forEach(p=>main.append(karta(p,true,c))):main.append($("div","puste","Jeszcze nic tu nie wstawiono."))}
 function wiek(t){const min=Math.round((Date.now()-new Date(t))/60000);return isNaN(min)?"":min<2?"przed chwilą":min<90?min+" min temu":Math.round(min/60)+" h temu"}
-function subtitle(){g("sub").textContent=tPobrania?"stan z komputera: "+kiedy(tPobrania)+" ("+wiek(tPobrania)+")":"brak danych z komputera"}
+function subtitle(){const czeka=oczekuje&&new Date(tPobrania)<oczekuje;
+  g("sub").textContent=(tPobrania?"stan z komputera: "+kiedy(tPobrania)+" ("+wiek(tPobrania)+")":"brak danych z komputera")+(czeka?" • zmiana ustawień zapisana, czeka na komputer":"")}
 function start(){
   db=firebase.firestore();
   db.collection("stan").doc("aktualny").onSnapshot(s=>{
@@ -140,7 +141,9 @@ g("u_zapisz").onclick=async()=>{
     for(const t of[...lista("u_film"),...lista("u_short")])if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(t))throw new Error("zła godzina: "+t);
     await db.collection("ustawienia").doc(cur).set({strefa:g("u_strefa").value.trim(),zapas_dni:z,godziny_film:lista("u_film").join(","),
       godziny_short:lista("u_short").join(","),zmieniono:new Date().toISOString().replace(/\.\d+Z$/,"Z")});
-    g("ustaw").classList.remove("on");rysuj()}
+    const c=D.find(x=>x.id===cur);   /* od razu pokaż nową wartość; komputer pobierze ją w ciągu ok. minuty */
+    c.planer={...c.planer,strefa:g("u_strefa").value.trim(),zapas_dni:z,godziny:{film:lista("u_film"),short:lista("u_short")}};
+    oczekuje=Date.now();g("ustaw").classList.remove("on");rysuj();subtitle()}
   catch(e){const b=g("u_blad");b.textContent=e.message;b.style.display=""}};
 init();
 </script></body></html>
