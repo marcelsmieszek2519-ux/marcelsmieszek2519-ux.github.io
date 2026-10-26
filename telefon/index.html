@@ -1,190 +1,360 @@
 <!doctype html><html lang="pl"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#14161a">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f2ec" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#14161a" media="(prefers-color-scheme: dark)">
 <title>Publikator</title><style>
-:root{--bg:#14161a;--panel:#1d2026;--line:#2b2f38;--tx:#e8eaee;--mut:#8b92a1;--acc:#e8a33d;--ok:#5cb87a;--bad:#e06c6c;--in:#14161a}
-@media(prefers-color-scheme:light){:root{--bg:#f4f1ea;--panel:#fff;--line:#ddd7ca;--tx:#1b1d22;--mut:#6b6f78;--acc:#b8741a;--ok:#2f8a53;--bad:#b84a4a;--in:#faf8f3}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.45 system-ui,Segoe UI,sans-serif}
-header{padding:18px 16px 0;max-width:760px;margin:0 auto}.hdr{display:flex;align-items:flex-end;gap:10px}
-h1{font-size:20px;margin:0 0 2px}.sub{color:var(--mut);font-size:13px}
-nav{display:flex;gap:6px;overflow-x:auto;padding:14px 16px 0;max-width:760px;margin:0 auto}
-nav button{flex:none;background:none;border:1px solid var(--line);color:var(--mut);padding:8px 14px;border-radius:999px;font:inherit;font-size:14px}
-nav button.on{background:var(--acc);border-color:var(--acc);color:#1b1305;font-weight:600}
-main{max-width:760px;margin:0 auto;padding:6px 16px 60px}
-h2{font-size:12px;text-transform:uppercase;letter-spacing:1.2px;color:var(--mut);margin:26px 0 10px;font-weight:600}
-.k{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px}
-.t{font-weight:600;word-break:break-word}.m{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;align-items:center}
-.b{font-size:12px;padding:2px 9px;border-radius:999px;border:1px solid var(--line);color:var(--mut)}
-.b.ok{color:var(--ok);border-color:var(--ok)}.b.pub{color:var(--acc);border-color:var(--acc)}.b.bad{color:var(--bad);border-color:var(--bad)}
-.btn{font:inherit;font-size:14px;color:var(--acc);text-decoration:none;border:1px solid var(--acc);background:none;padding:6px 12px;border-radius:8px}
-.btn.m2{padding:3px 9px;font-size:13px}.btn.r{margin-left:auto}
-.puste{color:var(--mut);font-size:14px;padding:6px 2px}.hint{font-size:12px;color:var(--mut);margin-top:4px}
-.ekran{position:fixed;inset:0;background:var(--bg);overflow:auto;display:none;z-index:5}
-.ekran.on{display:block}.ekran .w{max-width:620px;margin:0 auto;padding:18px 16px 60px}
-label{display:block;font-size:13px;color:var(--mut);margin:14px 0 4px}
-input{width:100%;font:inherit;color:var(--tx);background:var(--in);border:1px solid var(--line);border-radius:8px;padding:10px}
-.sub2{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 0}.sub2 button{background:none;border:0;border-bottom:2px solid transparent;color:var(--mut);padding:6px 4px;margin-right:10px;font:inherit;font-size:14px}
-.sub2 button.on{color:var(--tx);border-bottom-color:var(--acc);font-weight:600}
-.k.z{display:flex;gap:12px}.k.z .im{flex:none;width:112px;height:63px;border-radius:8px;background:var(--line);object-fit:cover;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:11px}
-.k.z .tr{flex:1;min-width:0}.gear{background:none;border:1px solid var(--line);color:var(--mut);border-radius:8px;padding:5px 10px;font:inherit;font-size:13px;margin-left:auto}
-.gr{display:flex;gap:10px;align-items:center;margin:6px 0}.gr input{width:auto}.gr .hint{margin:0;flex:1}
-select{width:100%;font:inherit;color:var(--tx);background:var(--in);border:1px solid var(--line);border-radius:8px;padding:10px}
-.btn.zly{color:var(--bad);border-color:var(--bad)}
+:root{
+  --bg:#f5f2ec;--karta:#ffffff;--linia:#e3ddd0;--tx:#1d1f24;--mut:#666b75;--acc:#b8741a;--acc-tlo:#fbefd9;--acc-tx:#ffffff;
+  --ok:#23804a;--ok-tlo:#e3f4ea;--info:#2b6cb0;--info-tlo:#e6f0fb;--bad:#b3261e;--bad-tlo:#fbe9e7;--wrt:#8a6d1f;--wrt-tlo:#fbf3d6;--in:#fbfaf7;--cien:0 1px 2px rgba(30,25,10,.06),0 3px 10px rgba(30,25,10,.05)}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#14161a;--karta:#1e2128;--linia:#2e323c;--tx:#eceef2;--mut:#98a0ae;--acc:#f0ab43;--acc-tlo:#3a2c14;--acc-tx:#1b1305;
+  --ok:#5fc48a;--ok-tlo:#16301f;--info:#7db4f0;--info-tlo:#17283d;--bad:#f08a82;--bad-tlo:#3a1c19;--wrt:#e2c25f;--wrt-tlo:#33290f;--in:#14161a;--cien:none}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--tx);font:17px/1.45 system-ui,"Segoe UI",Roboto,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+h1{font-size:22px;margin:0;letter-spacing:-.2px}
+h2{font-size:15px;margin:0;color:var(--mut);font-weight:700}
+.w{max-width:720px;margin:0 auto;padding:0 16px}
+
+/* nagłówek (przyklejony, żeby zakładki były zawsze pod ręką) */
+header{position:sticky;top:0;z-index:4;background:var(--bg);padding:14px 0 10px;border-bottom:1px solid var(--linia)}
+.gora{display:flex;align-items:center;gap:10px}
+.tyt{flex:1;min-width:0}
+.zycie{display:flex;align-items:flex-start;gap:8px;font-size:14px;line-height:1.3;color:var(--mut);margin-top:8px}
+.zycie .kropka{margin-top:4px}
+.kropka{flex:none;width:10px;height:10px;border-radius:50%;background:var(--mut)}
+.kropka.ok{background:var(--ok)}.kropka.wrt{background:#d9a021}.kropka.bad{background:var(--bad)}
+.ikony{display:flex;gap:8px;flex:none}
+.ikona{width:46px;height:46px;border-radius:14px;border:1px solid var(--linia);background:var(--karta);font-size:20px;line-height:1;cursor:pointer;box-shadow:var(--cien)}
+.ikona:active{transform:scale(.96)}
+.kanaly{display:flex;gap:8px;overflow-x:auto;padding:12px 0 2px;scrollbar-width:none}
+.kanaly::-webkit-scrollbar{display:none}
+.kanaly button{flex:none;border:1px solid var(--linia);background:var(--karta);border-radius:999px;padding:9px 16px;min-height:42px;cursor:pointer}
+.kanaly button.on{background:var(--acc);border-color:var(--acc);color:var(--acc-tx);font-weight:700}
+.zakl{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:10px;background:var(--linia);padding:4px;border-radius:14px}
+.zakl button{border:0;background:transparent;border-radius:10px;padding:10px 2px;min-height:44px;font-size:14px;color:var(--mut);cursor:pointer;line-height:1.15}
+.zakl button.on{background:var(--karta);color:var(--tx);font-weight:700;box-shadow:var(--cien)}
+
+main{padding:14px 0 120px}
+.plan{display:flex;gap:12px;align-items:center;background:var(--karta);border:1px solid var(--linia);border-radius:16px;padding:12px 14px;box-shadow:var(--cien)}
+.plan .tx{flex:1;min-width:0;font-size:15px}
+.plan .tx b{display:block;font-size:16px}
+.plan .tx small{display:block;color:var(--mut);font-size:13.5px;margin-top:2px}
+.dzien{margin:22px 4px 8px;font-size:15px;font-weight:700;color:var(--mut)}.dzien::first-letter{text-transform:uppercase}
+.dzien small{font-weight:400;margin-left:6px}
+
+/* karta filmu */
+.k{display:flex;flex-direction:column;gap:12px;background:var(--karta);border:1px solid var(--linia);border-radius:16px;padding:12px;margin-bottom:10px;box-shadow:var(--cien)}
+.k .gora2{display:flex;gap:12px;align-items:flex-start}
+.im{flex:none;width:118px;aspect-ratio:16/9;border-radius:10px;background:var(--linia);object-fit:cover;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--mut);text-align:center;padding:4px}
+.k .t{flex:1;min-width:0;font-weight:700;font-size:16.5px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word}
+.st{display:flex;gap:10px;align-items:flex-start;border-radius:12px;padding:9px 11px;background:var(--linia)}
+.st .ik{flex:none;font-size:18px;line-height:1.3}
+.st .tt{flex:1;min-width:0}
+.st b{display:block;font-size:15.5px;line-height:1.3}
+.st small{display:block;font-size:14px;line-height:1.35;margin-top:1px;opacity:.92}
+.st.ok{background:var(--ok-tlo);color:var(--ok)}.st.info{background:var(--info-tlo);color:var(--info)}
+.st.acc{background:var(--acc-tlo);color:var(--acc)}.st.bad{background:var(--bad-tlo);color:var(--bad)}.st.wrt{background:var(--wrt-tlo);color:var(--wrt)}
+.st.szary{background:var(--linia);color:var(--mut)}
+.akcje{display:flex;gap:8px;flex-wrap:wrap}
+.akcje>*{flex:1 1 140px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:9px 14px;border-radius:12px;border:1.5px solid var(--acc);background:transparent;color:var(--acc);font-weight:600;font-size:15.5px;text-decoration:none;cursor:pointer;text-align:center}
+.btn:active{transform:scale(.98)}
+.btn.pelny{background:var(--acc);color:var(--acc-tx)}
+.btn.zly{border-color:var(--bad);color:var(--bad)}
+.btn.cichy{border-color:var(--linia);color:var(--tx);font-weight:500}
+.btn[disabled]{opacity:.5}
+.puste{text-align:center;color:var(--mut);padding:26px 12px;border:1.5px dashed var(--linia);border-radius:16px;font-size:15.5px}
+.puste b{display:block;color:var(--tx);font-size:17px;margin-bottom:4px}
+.wiecej{display:block;width:100%;margin-top:6px}
+.zdarz{display:flex;gap:8px;font-size:14.5px;padding:7px 2px;border-bottom:1px solid var(--linia)}
+.zdarz:last-child{border:0}.zdarz.bad{color:var(--bad)}.zdarz .cz{color:var(--mut);flex:none;width:118px}
+
+/* ekrany pełne (ustawienia, formularz, logowanie) */
+.ekran{position:fixed;inset:0;z-index:10;background:var(--bg);display:none;flex-direction:column}
+.ekran.on{display:flex}
+.ekran .tresc{flex:1;overflow:auto;padding:16px 0 24px}
+.ekran .pasek{border-top:1px solid var(--linia);background:var(--bg);padding:12px 0 max(12px,env(safe-area-inset-bottom))}
+.ekran .pasek .w{display:flex;gap:10px}
+.ekran .pasek .btn{flex:1}.ekran .pasek .btn.zly{flex:0 0 auto}
+.ekran h1{margin:6px 0 14px}
+.sekcja{background:var(--karta);border:1px solid var(--linia);border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:var(--cien)}
+.sekcja h3{margin:0 0 4px;font-size:17px}
+.sekcja .opis{font-size:14.5px;color:var(--mut);margin:0 0 12px}
+label.e{display:block;font-size:14.5px;font-weight:600;margin:12px 0 5px}
+input[type=text],input[type=email],input[type=password],input[type=number],input[type=date],select,textarea{width:100%;min-height:48px;padding:10px 12px;border:1.5px solid var(--linia);border-radius:12px;background:var(--in);font-size:16.5px}
+textarea{min-height:100px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:3px solid var(--acc-tlo);border-color:var(--acc)}
+.hint{font-size:14px;color:var(--mut);margin-top:6px}
+.blad{background:var(--bad-tlo);color:var(--bad);border-radius:12px;padding:9px 12px;font-size:15px;margin-top:10px}
+
+/* wybór godziny (dwie listy zamiast zegara systemowego) */
+.godz{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:12px 0;border-bottom:1px solid var(--linia)}
+.godz:last-of-type{border-bottom:0}
+.czas{display:flex;align-items:center;gap:6px;flex:none}
+.czas select{width:76px;min-height:52px;font-size:22px;font-weight:700;text-align:center;text-align-last:center;padding:6px 4px;border-radius:14px}
+.czas .dwu{font-size:24px;font-weight:700;color:var(--mut)}
+.godz .opis2{order:3;flex-basis:100%;font-size:14.5px;line-height:1.3;color:var(--mut)}
+.godz .opis2 b{color:var(--tx);font-size:15.5px;margin-right:6px}
+.godz .x{margin-left:auto}
+.x{flex:none;width:44px;height:44px;border-radius:12px;border:1.5px solid var(--linia);background:transparent;color:var(--bad);font-size:18px;cursor:pointer}
+.szybkie{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.szybkie .chip{min-height:42px}
+.chip{border:1.5px solid var(--linia);background:var(--karta);border-radius:999px;padding:8px 14px;cursor:pointer;font-size:15px}
+.chip.on{background:var(--acc-tlo);border-color:var(--acc);color:var(--acc);font-weight:700}
+.dodaj{width:100%;margin-top:10px;border-style:dashed}
+.krok{display:flex;align-items:center;gap:12px}
+.krok button{width:54px;height:54px;border-radius:14px;border:1.5px solid var(--acc);background:transparent;color:var(--acc);font-size:28px;line-height:1;cursor:pointer}
+.krok .liczba{min-width:90px;text-align:center;font-size:30px;font-weight:800}
+.krok .liczba small{display:block;font-size:14px;font-weight:400;color:var(--mut)}
+.wybor{display:flex;flex-wrap:wrap;gap:8px}
+.dwa{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:380px){.dwa{grid-template-columns:1fr}.im{width:100px}.czas select{width:68px}}
+.postep{height:10px;background:var(--linia);border-radius:6px;overflow:hidden;margin-top:12px;display:none}.postep i{display:block;height:100%;width:0;background:var(--acc)}
+.sr{position:absolute;left:-9999px}
+
+.toast{position:fixed;left:50%;bottom:max(24px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:30;background:var(--tx);color:var(--bg);
+ padding:12px 18px;border-radius:14px;font-size:15.5px;box-shadow:0 6px 24px rgba(0,0,0,.3);max-width:92vw;text-align:center}
+details{margin-top:12px}summary{cursor:pointer;font-weight:600;color:var(--acc);padding:6px 0}
+input[type=checkbox]{width:22px;height:22px;min-height:0;vertical-align:middle;margin-right:8px;accent-color:var(--acc)}
+input[type=file]{width:100%;font-size:15px;padding:10px;border:1.5px dashed var(--linia);border-radius:12px;background:var(--in)}
+.logowanie{max-width:420px;margin:0 auto;padding-top:12vh}
+.logowanie p{color:var(--mut)}
 </style></head><body>
-<div class="ekran" id="login"><div class="w"><h1>Publikator</h1>
-<label>E-mail</label><input id="em" type="email" autocomplete="username">
-<label>Hasło</label><input id="ha" type="password" autocomplete="current-password">
-<div class="m"><button class="btn" id="zaloguj">Wejdź</button><span class="b bad" id="lblad" style="display:none"></span></div></div></div>
-
-<header class="hdr"><div><h1>Publikator</h1><div class="sub" id="sub">ładuję…</div></div><button class="gear" id="dzwonek" style="display:none">🔔 Powiadomienia</button><button class="gear" id="gear" style="margin-left:0">⚙ Ustawienia</button></header>
-<nav id="nav"></nav><main id="main"></main>
-
-<div class="ekran" id="ustaw"><div class="w">
-<h1 id="u_tytul">Ustawienia kanału</h1>
-<div class="hint">Zapisane tutaj ustawienia komputer pobierze, gdy będzie włączony (zwykle w ciągu kilku minut). Dotyczą filmów, które planer dopiero ułoży; filmy już wgrane zmienisz w YouTube Studio.</div>
-<label>Strefa czasowa widowni (dla kogo publikujesz; zmiana czasu letni/zimowy liczy się sama)</label><select id="u_strefa"></select>
-<div class="hint" id="u_teraz"></div>
-<label>Zapas dni (na ile dni do przodu trzymamy wgrane filmy, 0–14)</label><input id="u_zapas" type="number" min="0" max="14">
-<label>Godziny publikacji filmów (liczba godzin = liczba filmów dziennie)</label><div id="u_film_l"></div>
-<button type="button" class="btn m2" id="u_film_d">+ Dodaj godzinę</button>
-<label>Godziny publikacji shortów</label><div id="u_short_l"></div>
-<button type="button" class="btn m2" id="u_short_d">+ Dodaj godzinę</button>
-<div class="m"><button class="btn" id="u_zapisz">Zapisz</button><button class="btn" id="u_anuluj">Anuluj</button><span class="b bad" id="u_blad" style="display:none"></span></div>
+<header><div class="w"><div class="gora">
+<div class="tyt"><h1>Publikator</h1></div>
+<div class="ikony"><button class="ikona" id="dzwonek" aria-label="Powiadomienia" title="Powiadomienia" style="display:none">🔔</button><button class="ikona" id="gear" aria-label="Plan publikacji" title="Plan publikacji">⚙️</button></div></div>
+<div class="zycie"><i class="kropka" id="kropka"></i><span id="zycieTxt">Łączę…</span></div>
+<div class="kanaly" id="kanaly"></div><div class="zakl" id="zakl"></div></div></header>
+<main class="w" id="main"></main>
+<div class="ekran" id="ustaw"><div class="tresc"><div class="w">
+<h1 id="u_tytul">Plan publikacji</h1>
+<div class="sekcja"><h3>Dla jakiej widowni publikujesz?</h3>
+<p class="opis">Godziny poniżej liczymy według czasu tej widowni. Zmianę czasu letniego i zimowego uwzględniamy sami.</p>
+<select id="u_strefa" aria-label="Strefa czasowa widowni"></select><div class="hint" id="u_strefa_opis" style="color:var(--tx);font-weight:600"></div><div class="hint" id="u_teraz"></div></div>
+<div class="sekcja"><h3>Filmy: o której godzinie?</h3>
+<p class="opis">Każda godzina to jeden film dziennie. Wybierz godzinę z list albo dotknij gotowej godziny poniżej.</p>
+<div id="u_film_l"></div><div class="szybkie" id="u_film_s"></div>
+<button type="button" class="btn dodaj" id="u_film_d">＋ Dodaj inną godzinę</button></div>
+<div class="sekcja"><h3>Shorty: o której godzinie?</h3>
+<p class="opis">Tak samo jak filmy. Shorty trafiają też na TikToka.</p>
+<div id="u_short_l"></div><div class="szybkie" id="u_short_s"></div>
+<button type="button" class="btn dodaj" id="u_short_d">＋ Dodaj inną godzinę</button></div>
+<div class="sekcja"><h3>Wgrywanie z wyprzedzeniem</h3>
+<p class="opis">Na ile dni do przodu wgrywać filmy na YouTube. YouTube sam je opublikuje o wyznaczonej godzinie, więc komputer nie musi wtedy działać.</p>
+<div class="krok"><button type="button" id="u_minus" aria-label="Mniej dni">−</button>
+<div class="liczba"><span id="u_zapas">3</span><small id="u_zapas_j">dni</small></div>
+<button type="button" id="u_plus" aria-label="Więcej dni">+</button></div></div>
+<div class="blad" id="u_blad" style="display:none"></div>
 </div></div>
-
+<div class="pasek"><div class="w"><button class="btn cichy" id="u_anuluj">Anuluj</button><button class="btn pelny" id="u_zapisz">Zapisz plan</button></div></div></div>
+<div class="ekran" id="login"><div class="tresc"><div class="w logowanie"><h1>Publikator</h1>
+<p>Zaloguj się, żeby zobaczyć swoje filmy i plan publikacji.</p>
+<label class="e" for="em">E-mail</label><input id="em" type="email" autocomplete="username" inputmode="email">
+<label class="e" for="ha">Hasło</label><input id="ha" type="password" autocomplete="current-password">
+<div class="blad" id="lblad" style="display:none"></div>
+<div class="akcje" style="margin-top:14px"><button class="btn pelny" id="zaloguj">Zaloguj się</button></div></div></div></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="konfiguracja.js"></script>
 <script>
-/* Widok tylko do odczytu + ustawienia. Dane: Firestore (stan/aktualny, mini/<id>, ustawienia/<kanal>).
-   konfiguracja.js definiuje window.FIREBASE_CONFIG (publiczna konfiguracja aplikacji web Firebase, nie sekret). */
+/* ===== Wspólne dla panelu na komputerze i widoku na telefonie: wygląd i logika list, plan publikacji ===== */
 const $=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e};
 const g=id=>document.getElementById(id);
-let D=[],cur=null,db=null,tPobrania="",oczekuje=0,puls="";
-const SUB=[["yt-film","YouTube filmy"],["yt-short","YouTube shorty"],["tiktok","TikTok"],["insta","Instagram"]];
-let sub="yt-film";try{sub=localStorage.getItem("sub")||sub}catch(e){}
-const miniCache={};
-function kiedy(s){if(!s)return"";const d=new Date(s);return isNaN(d)?s:d.toLocaleString("pl-PL",{dateStyle:"medium",timeStyle:"short"})}
+const MOJA="Europe/Warsaw";   /* czas „u Ciebie” */
+const APP={D:[],cur:null,sub:"yt-film",Z:[],zywy:"",lokalny:false,wiecejWys:15,hooki:{}};
+try{APP.sub=localStorage.getItem("sub")||APP.sub}catch(e){}
+if(!["yt-film","yt-short","tiktok"].includes(APP.sub))APP.sub="yt-film";
+const SUB=[["yt-film","Filmy YT"],["yt-short","Shorty YT"],["tiktok","TikTok"]];   /* Instagram dodamy, gdy będzie działał */
+
+/* ---------- strefy czasowe (wybór z opisami) ---------- */
+const STREFY=[
+["USA i Kanada",[["America/New_York","Wschodnie USA: Nowy Jork, Waszyngton, Miami, Atlanta"],["America/Chicago","Środkowe USA: Chicago, Dallas, Houston"],["America/Denver","Górskie USA: Denver, Salt Lake City"],["America/Phoenix","Arizona: Phoenix (bez zmiany czasu)"],["America/Los_Angeles","Zachodnie USA: Los Angeles, San Francisco, Seattle"],["America/Anchorage","Alaska: Anchorage"],["Pacific/Honolulu","Hawaje: Honolulu"],["America/Toronto","Kanada wschodnia: Toronto, Montreal"],["America/Vancouver","Kanada zachodnia: Vancouver"]]],
+["Ameryka Łacińska",[["America/Mexico_City","Meksyk"],["America/Bogota","Kolumbia i Peru: Bogota, Lima"],["America/Sao_Paulo","Brazylia: Sao Paulo, Rio de Janeiro"],["America/Argentina/Buenos_Aires","Argentyna: Buenos Aires"],["America/Santiago","Chile: Santiago"]]],
+["Europa",[["Europe/London","Wielka Brytania i Irlandia: Londyn, Dublin"],["Europe/Warsaw","Polska i Europa Środkowa: Warszawa, Berlin, Paryż"],["Europe/Athens","Europa Wschodnia: Ateny, Helsinki, Kijów"],["Europe/Moscow","Rosja: Moskwa"]]],
+["Azja",[["Asia/Dubai","Zatoka Perska: Dubaj"],["Asia/Kolkata","Indie: Delhi, Mumbaj"],["Asia/Manila","Filipiny: Manila"],["Asia/Singapore","Singapur i Malezja"],["Asia/Shanghai","Chiny: Pekin, Szanghaj"],["Asia/Tokyo","Japonia: Tokio"],["Asia/Seoul","Korea Południowa: Seul"]]],
+["Australia i Oceania",[["Australia/Sydney","Australia wschodnia: Sydney, Melbourne"],["Australia/Perth","Australia zachodnia: Perth"],["Pacific/Auckland","Nowa Zelandia: Auckland"]]],
+["Afryka",[["Africa/Lagos","Nigeria: Lagos"],["Africa/Cairo","Egipt: Kair"],["Africa/Nairobi","Kenia: Nairobi"],["Africa/Johannesburg","RPA: Johannesburg, Kapsztad"]]]];
+function nazwaStrefy(id){for(const[,l]of STREFY)for(const[i,o]of l)if(i===id)return o;return id}
+function krotkaStrefa(id){return nazwaStrefy(id).split(":")[0]}
+function tzOff(strefa,ms){ms=Math.floor(ms/1000)*1000;const p=new Intl.DateTimeFormat("en-US",{timeZone:strefa,hourCycle:"h23",year:"numeric",month:"numeric",day:"numeric",hour:"numeric",minute:"numeric",second:"numeric"})
+  .formatToParts(new Date(ms)).reduce((a,x)=>(a[x.type]=+x.value,a),{});return Date.UTC(p.year,p.month-1,p.day,p.hour,p.minute,p.second)-ms}
+function utcTxt(strefa){const min=Math.round(tzOff(strefa,Date.now())/900000)*15,a=Math.abs(min);
+  return"UTC"+(min>=0?"+":"−")+Math.floor(a/60)+(a%60?":"+String(a%60).padStart(2,"0"):"")}
+/* godzina w strefie widowni -> godzina u Ciebie {g:"20:00", d:0|1|-1 (dzień później/wcześniej)} */
+function polskaGodz(strefa,hhmm){
+  if(!/^\d\d:\d\d$/.test(hhmm))return null;
+  try{const[h,mi]=hhmm.split(":").map(Number),teraz=Date.now(),d=new Date(teraz+tzOff(strefa,teraz));
+    const guess=Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate(),h,mi);let t=guess-tzOff(strefa,guess);t=guess-tzOff(strefa,t);
+    const pl=t+tzOff(MOJA,t),tam=t+tzOff(strefa,t),gg=new Date(pl);
+    return{g:String(gg.getUTCHours()).padStart(2,"0")+":"+String(gg.getUTCMinutes()).padStart(2,"0"),d:Math.floor(pl/864e5)-Math.floor(tam/864e5)}}catch(e){return null}}
+
+/* ---------- daty po ludzku (zawsze czas „u Ciebie”) ---------- */
+const godz=(d,tz)=>d.toLocaleTimeString("pl-PL",{hour:"2-digit",minute:"2-digit",timeZone:tz||MOJA});
+const kluczDnia=d=>d.toLocaleDateString("sv-SE",{timeZone:MOJA});
+function dzienNazwa(d){const r=Math.round((new Date(kluczDnia(d))-new Date(kluczDnia(new Date())))/864e5);
+  if(r===0)return"Dziś";if(r===1)return"Jutro";if(r===2)return"Pojutrze";if(r===-1)return"Wczoraj";
+  return d.toLocaleDateString("pl-PL",{weekday:"long",day:"numeric",month:"long",timeZone:MOJA})}
+const terminTxt=d=>{const n=dzienNazwa(d);return(/^[A-ZŁ]/.test(n)&&n.length<10?n.toLowerCase():n)+" o "+godz(d)};
+function wiek(t){const min=Math.round((Date.now()-new Date(t))/60000);if(isNaN(min))return"";
+  return min<2?"przed chwilą":min<90?min+" min temu":min<60*36?Math.round(min/60)+" godz. temu":Math.round(min/1440)+" dni temu"}
+function termin(p){if(p.slot_utc)return new Date(p.slot_utc);if(p.premiera)return new Date(p.premiera);
+  if(p.kiedy){const d=new Date(p.kiedy);return isNaN(d)?null:d}return null}
+function odm(n,f){const a=n%10,b=n%100;return n===1?f[0]:(a>=2&&a<=4&&!(b>=12&&b<=14))?f[1]:f[2]}
+
+/* ---------- status filmu prostym językiem ---------- */
 function pasuje(p,s){const pl=p.platformy||[];
   if(s==="yt-film")return pl.includes("youtube")&&p.typ!=="short";
   if(s==="yt-short")return pl.includes("youtube")&&p.typ==="short";
   if(s==="tiktok")return pl.includes("tiktok");
   return pl.includes("instagram")}
-function czasStrefa(iso,strefa){const d=new Date(iso);if(isNaN(d))return"";
-  try{return d.toLocaleString("pl-PL",{timeZone:strefa,weekday:"short",hour:"2-digit",minute:"2-digit"})+" ("+strefa.split("/").pop().replace("_"," ")+")"}catch(e){return""}}
-function link(t,u){const a=$("a","btn m2",t);a.href=u;a.target="_blank";a.rel="noopener";return a}
-function miniatura(p){
-  const d=$("div","im","brak miniatury");if(!p.mini)return d;
-  const wstaw=b64=>{const i=document.createElement("img");i.className="im";i.alt="";i.src="data:image/jpeg;base64,"+b64;d.replaceWith(i)};
-  if(miniCache[p.mini])wstaw(miniCache[p.mini]);
-  else db.collection("mini").doc(p.mini).get().then(s=>{if(s.exists){miniCache[p.mini]=s.data().b64;wstaw(s.data().b64)}}).catch(()=>{});
-  return d}
-function karta(p,wys,c){
-  const k=$("div","k z");k.append(miniatura(p));const tr=$("div","tr");k.append(tr);
-  tr.append($("div","t",p.tytul));const m=$("div","m");tr.append(m);const strefa=c.planer.strefa;
-  if(!wys){
-    if(p.wstrzymany)m.append($("span","b","wstrzymany"));
-    if(p.slot_utc)m.append($("span","b pub","termin: "+czasStrefa(p.slot_utc,strefa)));
-    else if(p.kiedy)m.append($("span","b","wyślę: "+kiedy(p.kiedy)));
-    else m.append($("span","b","w puli, bez terminu"));
-    const yt=(p.stan||{}).youtube;
-    if(yt&&yt.id){m.append($("span","b ok","✓ wgrany na YouTube"));if(yt.url)m.append(link("Studio",yt.url))}
-  }else{
-    const yt=(p.stan||{}).youtube,tt=(p.stan||{}).tiktok;
-    if(sub.startsWith("yt")&&yt){
-      if(yt.id&&p.premiera){const przyszla=new Date(p.premiera)>new Date();
-        m.append($("span","b "+(przyszla?"":"ok"),przyszla?"prywatny, zaplanowany: "+czasStrefa(p.premiera,strefa):"opublikowany "+czasStrefa(p.premiera,strefa)))}
-      else m.append($("span","b "+(p.widocznosc==="public"?"pub":""),p.widocznosc==="public"?"publiczny":p.widocznosc==="unlisted"?"niepubliczny":"prywatny"));
-      if(yt.id){m.append(link("Studio","https://studio.youtube.com/video/"+yt.id+"/edit"));
-        m.append(link("Statystyki","https://studio.youtube.com/video/"+yt.id+"/analytics/tab-overview/period-default"))}}
-    if(sub==="tiktok"&&tt){
-      m.append($("span","b "+(tt.id?"ok":"bad"),tt.id?"✓ szkic w aplikacji TikTok"+(tt.wyslano?" ("+kiedy(tt.wyslano)+")":""):"✗ nie wysłano"))}
-  }
+function status(p,tryb,c){
+  const tz=c.planer.strefa,t=termin(p),st=p.stan||{},k=t?terminTxt(t):"",usa=t?" ("+godz(t,tz)+" – "+krotkaStrefa(tz)+")":"";
+  if(p.wstrzymany)return{k:"wrt",ik:"⏸",t:"Wstrzymany",d:"Nie zostanie wysłany, dopóki go nie wznowisz."};
+  if(tryb==="pula")return{k:"szary",ik:"🕓",t:"Gotowy, czeka na wolny termin",d:"Plan sam przydzieli mu godzinę."};
+  if(APP.sub==="tiktok"){const tt=st.tiktok;
+    if(tt&&tt.id)return t&&t<new Date()
+      ?{k:"acc",ik:"📱",t:"Czas minął: opublikuj w aplikacji TikTok",d:"Szkic czeka w skrzynce TikToka (termin był "+k+")."}
+      :{k:"info",ik:"📱",t:"Szkic czeka w aplikacji TikTok",d:"Opublikuj go ręcznie "+k+usa+"."};
+    return{k:"szary",ik:"⏳",t:"Szkic jeszcze nie wysłany do TikToka",d:"Wyślemy go sami przed terminem"+(t?" ("+k+")":"")+", ale komputer musi być wtedy włączony."}}
+  const y=st.youtube;
+  if(!y||!y.id)return{k:"szary",ik:"⏳",t:"Czeka na wysłanie na YouTube",d:"Wgra się sam, gdy komputer będzie włączony. Publikacja: "+k+usa+"."};
+  const pr=p.premiera?new Date(p.premiera):null;
+  if(pr&&pr>new Date())return{k:"info",ik:"🗓",t:"Zaplanowany na YouTube",d:"Opublikuje się sam "+terminTxt(pr)+" ("+godz(pr,tz)+" – "+krotkaStrefa(tz)+")."};
+  if(pr||p.widocznosc==="public")return{k:"ok",ik:"✅",t:"Opublikowany na YouTube",d:pr?terminTxt(pr):""};
+  return{k:"szary",ik:"🔒",t:"Prywatny na YouTube",d:"Widzisz go tylko Ty."}}
+function miniatura(p){const e=APP.hooki.mini&&APP.hooki.mini(p);return e||$("div","im","Brak miniatury")}
+function przycisk(tekst,href,klasa){const a=$("a","btn "+(klasa||""),tekst);a.href=href;a.target="_blank";a.rel="noopener";return a}
+function karta(p,tryb,c){
+  const k=$("div","k"),gora=$("div","gora2");gora.append(miniatura(p),$("div","t",p.tytul));k.append(gora);
+  const s=status(p,tryb,c),st=$("div","st "+s.k),tt=$("div","tt");st.append($("span","ik",s.ik));tt.append($("b","",s.t));if(s.d)tt.append($("small","",s.d));st.append(tt);k.append(st);
+  const a=$("div","akcje"),y=(p.stan||{}).youtube;
+  if(APP.sub.startsWith("yt")&&y&&y.id){a.append(przycisk("Otwórz w YouTube Studio","https://studio.youtube.com/video/"+y.id+"/edit","pelny"),
+    przycisk("Statystyki","https://studio.youtube.com/video/"+y.id+"/analytics/tab-overview/period-default","cichy"))}
+  if(tryb==="czeka"&&APP.hooki.edytuj&&p.plik!==undefined){const e=$("button","btn cichy","Edytuj");e.onclick=()=>APP.hooki.edytuj(c,p);a.append(e)}
+  if(a.childNodes.length)k.append(a);
   return k}
+
+/* ---------- plan publikacji (karta u góry zakładki) ---------- */
+function planKarta(c){
+  const u=c.planer,typ=APP.sub==="yt-film"?"film":"short",lista=(u.godziny[typ]||[]).slice().sort(),box=$("div","plan"),tx=$("div","tx");
+  if(!lista.length){tx.append($("b","","Nie ustawiono godzin publikacji"),$("small","","Ustaw plan, a aplikacja sama poukłada kolejkę."))}
+  else{const pl=lista.map(h=>{const x=polskaGodz(u.strefa,h);return x?x.g:h});
+    tx.append($("b","",lista.length+" "+(typ==="film"?odm(lista.length,["film","filmy","filmów"]):odm(lista.length,["short","shorty","shortów"]))+" dziennie: "+pl.join(", ")),
+      $("small","","To godziny u Ciebie. W USA: "+lista.join(", ")+" ("+krotkaStrefa(u.strefa)+"). Wgrywamy "+u.zapas_dni+" "+odm(u.zapas_dni,["dzień","dni","dni"])+" do przodu."))}
+  const b=$("button","btn cichy",lista.length?"Zmień":"Ustaw");b.style.flex="none";b.onclick=()=>otworzUstawienia(c);box.append(tx,b);return box}
+
+/* ---------- życie komputera (kropka w nagłówku) ---------- */
+function odswiezZycie(){const k=g("kropka"),t=g("zycieTxt");if(!k)return;
+  if(APP.lokalny){k.className="kropka ok";t.textContent="Aplikacja działa na tym komputerze";return}
+  if(!APP.zywy){k.className="kropka";t.textContent="Czekam na dane z komputera…";return}
+  const min=(Date.now()-new Date(APP.zywy))/60000;
+  k.className="kropka "+(min<15?"ok":min<180?"wrt":"bad");
+  t.textContent=min<15?"Komputer działa • "+wiek(APP.zywy):min<180?"Komputer odpowiedział "+wiek(APP.zywy):"Komputer nie odpowiada od "+wiek(APP.zywy).replace(" temu","")+": nowe filmy nie będą wysyłane"}
+
+/* ---------- rysowanie ---------- */
 function rysuj(){
-  const nav=g("nav"),main=g("main");nav.replaceChildren();main.replaceChildren();
-  D.forEach(c=>{const b=$("button",c.id===cur?"on":"",c.nazwa);b.onclick=()=>{cur=c.id;rysuj()};nav.append(b)});
-  const c=D.find(x=>x.id===cur);if(!c){main.append($("div","puste","Brak danych. Komputer jeszcze nic nie wysłał do chmury."));return}
-  const sb=$("div","sub2");SUB.forEach(([id,nazwa])=>{const b=$("button",id===sub?"on":"",nazwa);b.onclick=()=>{sub=id;try{localStorage.setItem("sub",id)}catch(e){}rysuj()};sb.append(b)});main.append(sb);
-  const u=c.planer,godz=t=>(u.godziny[t]||[]).join(", ")||"brak";
-  main.append($("div","hint","Zapas: "+u.zapas_dni+" dni • strefa "+u.strefa+" • filmy: "+godz("film")+" • shorty: "+godz("short")));
-  if(sub==="insta")main.append($("div","puste","Instagram dodamy na końcu."));
-  const czeka=c.czeka.filter(p=>pasuje(p,sub)).sort((a,b)=>(a.slot_utc||a.kiedy||"~").localeCompare(b.slot_utc||b.kiedy||"~"));
-  const pula=(c.pula||[]).filter(p=>pasuje(p,sub));
-  main.append($("h2","","Czekają na wstawienie ("+(czeka.length+pula.length)+")"));
-  if(czeka.length+pula.length){czeka.forEach(p=>main.append(karta(p,false,c)));pula.forEach(p=>main.append(karta(p,false,c)))}
-  else main.append($("div","puste","Nic nie czeka."));
-  const wys=c.wyslane.filter(p=>pasuje(p,sub));
-  main.append($("h2","","Wstawione ("+wys.length+")"));
-  wys.length?wys.forEach(p=>main.append(karta(p,true,c))):main.append($("div","puste","Jeszcze nic tu nie wstawiono."))}
-function wiek(t){const min=Math.round((Date.now()-new Date(t))/60000);return isNaN(min)?"":min<2?"przed chwilą":min<90?min+" min temu":Math.round(min/60)+" h temu"}
-function subtitle(){const czeka=oczekuje&&new Date(tPobrania)<oczekuje;
-  const zywy=[tPobrania,puls].filter(Boolean).sort().pop();   /* ostatni znak życia komputera: zrzut albo puls */
-  g("sub").textContent=(zywy?"komputer odpowiedział: "+kiedy(zywy)+" ("+wiek(zywy)+")":"brak danych z komputera")+(czeka?" • zmiana ustawień zapisana, czeka na komputer":"")}
+  const kan=g("kanaly"),zak=g("zakl"),main=g("main");kan.replaceChildren();zak.replaceChildren();main.replaceChildren();
+  const widoczne=APP.D.filter(c=>!c.ukryty);if(!widoczne.find(c=>c.id===APP.cur)&&widoczne[0])APP.cur=widoczne[0].id;
+  widoczne.forEach(c=>{const b=$("button",c.id===APP.cur?"on":"",c.nazwa);b.onclick=()=>{APP.cur=c.id;rysuj()};kan.append(b)});
+  kan.style.display=widoczne.length>1?"":"none";
+  SUB.forEach(([id,nazwa])=>{const b=$("button",id===APP.sub?"on":"",nazwa);b.onclick=()=>{APP.sub=id;try{localStorage.setItem("sub",id)}catch(e){}rysuj()};zak.append(b)});
+  odswiezZycie();
+  const c=APP.D.find(x=>x.id===APP.cur);
+  if(!c){main.append(pusty("Brak danych","Gdy komputer wyśle pierwszy raport, kanały pojawią się tutaj."));return}
+  if(APP.sub==="insta"){main.append(pusty("Instagram dodamy na końcu","Do publikowania na Instagramie potrzebne jest konto Twórca. Na razie pracujemy na YouTube i TikToku."));return}
+  main.append(planKarta(c));
+  const czeka=c.czeka.filter(p=>pasuje(p,APP.sub)).sort((a,b)=>(termin(a)||1e15)-(termin(b)||1e15)),pula=(c.pula||[]).filter(p=>pasuje(p,APP.sub));
+  main.append($("div","dzien","Czekają na publikację ("+(czeka.length+pula.length)+")"));
+  if(!czeka.length&&!pula.length)main.append(pusty("Nic tu jeszcze nie czeka","Gdy pojawi się nowy film, aplikacja sama ułoży go w wolnym terminie."));
+  let ost="";czeka.forEach(p=>{const t=termin(p),kl=t?kluczDnia(t):"x";
+    if(kl!==ost){ost=kl;const h=$("div","dzien",t?dzienNazwa(t):"Bez terminu");main.append(h)}main.append(karta(p,"czeka",c))});
+  if(pula.length){main.append($("div","dzien","Gotowe, bez terminu"));pula.forEach(p=>main.append(karta(p,"pula",c)))}
+  const wys=c.wyslane.filter(p=>pasuje(p,APP.sub));
+  main.append($("div","dzien","Już wysłane ("+wys.length+")"));
+  if(!wys.length)main.append(pusty("Jeszcze nic nie wysłano","Tutaj zobaczysz filmy, które już poszły na platformę."));
+  wys.slice(0,APP.wiecejWys).forEach(p=>main.append(karta(p,"wys",c)));
+  if(wys.length>APP.wiecejWys){const b=$("button","btn cichy wiecej","Pokaż starsze ("+(wys.length-APP.wiecejWys)+")");b.onclick=()=>{APP.wiecejWys+=15;rysuj()};main.append(b)}
+  if(APP.hooki.zdarzenia)APP.hooki.zdarzenia(main)}
+function pusty(t,o){const d=$("div","puste");d.append($("b","",t),document.createTextNode(o));return d}
+
+/* ---------- ustawienia planu: wybór godziny listami, szybkie godziny, licznik dni ---------- */
+const SZYBKIE=["09:00","12:00","14:00","17:00","19:00","21:00"];
+let ustawZapas=3;
+function opcje(sel,od,do_,krok,wybr){const w=[];for(let i=od;i<=do_;i+=krok)w.push(String(i).padStart(2,"0"));if(wybr&&!w.includes(wybr))w.push(wybr);w.sort();
+  w.forEach(v=>{const o=document.createElement("option");o.value=o.textContent=v;sel.append(o)});sel.value=wybr}
+function wiersz(kont,val){const[h,m]=(val||"14:00").split(":"),r=$("div","godz"),cz=$("div","czas"),sh=document.createElement("select"),sm=document.createElement("select");
+  sh.setAttribute("aria-label","godzina");sm.setAttribute("aria-label","minuty");opcje(sh,0,23,1,h);opcje(sm,0,55,5,m);sh.onchange=sm.onchange=odswiezPodglad;
+  cz.append(sh,$("span","dwu",":"),sm);const op=$("div","opis2");op.append($("b",""),$("span",""));
+  const x=$("button","x","✕");x.type="button";x.setAttribute("aria-label","Usuń tę godzinę");x.onclick=()=>{r.remove();odswiezPodglad()};
+  r.append(cz,op,x);g(kont).append(r)}
+const wartosc=r=>{const s=r.querySelectorAll("select");return s[0].value+":"+s[1].value};
+function godziny(kont){return[...new Set([...g(kont).querySelectorAll(".godz")].map(wartosc))].sort()}
+function odswiezPodglad(){const st=g("u_strefa").value;g("u_strefa_opis").textContent=nazwaStrefy(st);
+  g("u_teraz").textContent=st?"Tam jest teraz "+new Date().toLocaleString("pl-PL",{timeZone:st,weekday:"long",hour:"2-digit",minute:"2-digit"})+" ("+utcTxt(st)+"). U Ciebie: "+godz(new Date())+". Przeliczenie dotyczy dzisiejszego dnia: po zmianie czasu w USA lub w Polsce różnica może się zmienić o godzinę.":"";
+  ["film","short"].forEach(t=>{const kont="u_"+t+"_l",ist=godziny(kont);
+    g(kont).querySelectorAll(".godz").forEach(r=>{const x=polskaGodz(st,wartosc(r)),op=r.querySelector(".opis2");
+      op.firstChild.textContent=x?"U Ciebie "+x.g:"";op.lastChild.textContent=x?(x.d>0?"(następnego dnia)":x.d<0?"(poprzedniego dnia)":"(tego samego dnia)"):""});
+    g("u_"+t+"_s").querySelectorAll(".chip").forEach(b=>b.classList.toggle("on",ist.includes(b.dataset.h)))});
+  g("u_zapas").textContent=ustawZapas;g("u_zapas_j").textContent=odm(ustawZapas,["dzień","dni","dni"])}
+function wypelnijStrefy(wybrana){const s=g("u_strefa");s.replaceChildren();let jest=false;
+  STREFY.forEach(([grupa,lista])=>{const og=document.createElement("optgroup");og.label=grupa;
+    lista.forEach(([id,opis])=>{const o=document.createElement("option");o.value=id;o.textContent=opis;if(id===wybrana){o.selected=true;jest=true}og.append(o)});s.append(og)});
+  if(!jest&&wybrana){const o=document.createElement("option");o.value=wybrana;o.textContent=wybrana;o.selected=true;s.prepend(o)}}
+function szybkie(t){const k=g("u_"+t+"_s");k.replaceChildren();k.append($("span","hint","Szybki wybór (godziny w USA):"));
+  SZYBKIE.forEach(h=>{const b=$("button","chip",h.replace(/^0/,""));b.type="button";b.dataset.h=h;
+    b.onclick=()=>{const ist=godziny("u_"+t+"_l");if(ist.includes(h)){g("u_"+t+"_l").querySelectorAll(".godz").forEach(r=>{if(wartosc(r)===h)r.remove()})}else wiersz("u_"+t+"_l",h);odswiezPodglad()};k.append(b)})}
+function otworzUstawienia(c){const u=c.planer;g("u_tytul").textContent="Plan publikacji • "+c.nazwa;wypelnijStrefy(u.strefa);ustawZapas=+u.zapas_dni;
+  ["film","short"].forEach(t=>{g("u_"+t+"_l").replaceChildren();(u.godziny[t]||[]).slice().sort().forEach(x=>wiersz("u_"+t+"_l",x));szybkie(t)});
+  odswiezPodglad();g("u_blad").style.display="none";g("ustaw").classList.add("on");g("ustaw").querySelector(".tresc").scrollTop=0}
+function initUstawienia(){
+  g("u_strefa").onchange=odswiezPodglad;
+  g("u_film_d").onclick=()=>{wiersz("u_film_l","14:00");odswiezPodglad()};g("u_short_d").onclick=()=>{wiersz("u_short_l","14:00");odswiezPodglad()};
+  g("u_minus").onclick=()=>{ustawZapas=Math.max(0,ustawZapas-1);odswiezPodglad()};g("u_plus").onclick=()=>{ustawZapas=Math.min(14,ustawZapas+1);odswiezPodglad()};
+  g("u_anuluj").onclick=()=>{g("ustaw").classList.remove("on")};
+  g("gear").onclick=()=>{const c=APP.D.find(x=>x.id===APP.cur);if(c)otworzUstawienia(c)};
+  g("u_zapisz").onclick=async()=>{const b=g("u_zapisz");b.disabled=true;
+    try{const dane={strefa:g("u_strefa").value,zapas_dni:ustawZapas,godziny:{film:godziny("u_film_l"),short:godziny("u_short_l")}};
+      await APP.hooki.zapiszUstawienia(APP.cur,dane);g("ustaw").classList.remove("on")}
+    catch(e){const x=g("u_blad");x.textContent="Nie udało się zapisać: "+e.message;x.style.display=""}
+    b.disabled=false}}
+
+/* ===== Widok na telefonie: dane z Firestore (zrzut stanu wysyła komputer), logowanie e-mailem ===== */
+let db=null,TPOB="",PULS="";
+const miniCache={};
+function toast(t){const e=$("div","toast",t);document.body.append(e);setTimeout(()=>e.remove(),4000)}
+APP.hooki.mini=p=>{
+  if(!p.mini)return null;
+  const img=b=>{const i=document.createElement("img");i.className="im";i.alt="";i.src="data:image/jpeg;base64,"+b;return i};
+  if(miniCache[p.mini])return img(miniCache[p.mini]);
+  const d=$("div","im","…");
+  db.collection("mini").doc(p.mini).get().then(s=>{if(s.exists){miniCache[p.mini]=s.data().b64;d.replaceWith(img(s.data().b64))}}).catch(()=>{});
+  return d};
+APP.hooki.zapiszUstawienia=async(kanal,u)=>{
+  await db.collection("ustawienia").doc(kanal).set({strefa:u.strefa,zapas_dni:u.zapas_dni,godziny_film:u.godziny.film.join(","),godziny_short:u.godziny.short.join(","),
+    zmieniono:new Date().toISOString().replace(/\.\d+Z$/,"Z")});
+  const c=APP.D.find(x=>x.id===kanal);c.planer={...c.planer,strefa:u.strefa,zapas_dni:u.zapas_dni,godziny:u.godziny};   /* pokaż od razu */
+  rysuj();toast("Zapisano. Komputer pobierze zmianę w ciągu minuty.")};
+
+function przeliczZywy(){APP.zywy=[TPOB,PULS].filter(Boolean).sort().pop()||"";odswiezZycie()}
 function start(){
   db=firebase.firestore();
   db.collection("stan").doc("aktualny").onSnapshot(s=>{
-    if(s.exists){const st=JSON.parse(s.data().json);D=st.kanaly;tPobrania=st.t;if(!cur||!D.find(x=>x.id===cur))cur=D[0]&&D[0].id}
-    subtitle();if(!g("ustaw").classList.contains("on"))rysuj()},
-    e=>{g("sub").textContent="błąd odczytu: "+e.code});
-  db.collection("stan").doc("puls").onSnapshot(s=>{if(s.exists){puls=s.data().t;subtitle()}},()=>{});
-  setInterval(subtitle,30000)}
-/* ---------- logowanie ---------- */
+    if(s.exists){const st=JSON.parse(s.data().json);APP.D=st.kanaly;TPOB=st.t;if(!APP.cur||!APP.D.find(x=>x.id===APP.cur))APP.cur=APP.D[0]&&APP.D[0].id}
+    przeliczZywy();rysuj()},
+    e=>{g("zycieTxt").textContent="Nie mogę pobrać danych ("+e.code+")";g("kropka").className="kropka bad"});
+  db.collection("stan").doc("puls").onSnapshot(s=>{if(s.exists){PULS=s.data().t;przeliczZywy()}},()=>{});
+  setInterval(odswiezZycie,30000)}
 function init(){
-  if(!window.FIREBASE_CONFIG){g("sub").textContent="brak konfiguracji Firebase (konfiguracja.js)";return}
+  initUstawienia();
+  if(window.Android&&Android.powiadomienia){g("dzwonek").style.display="";g("dzwonek").onclick=()=>Android.powiadomienia()}
+  if(!window.FIREBASE_CONFIG){g("zycieTxt").textContent="Brak konfiguracji";return}
   firebase.initializeApp(window.FIREBASE_CONFIG);
   firebase.auth().onAuthStateChanged(u=>{if(u){g("login").classList.remove("on");start()}else g("login").classList.add("on")});
-  g("zaloguj").onclick=async()=>{try{await firebase.auth().signInWithEmailAndPassword(g("em").value.trim(),g("ha").value);g("lblad").style.display="none"}
-    catch(e){const b=g("lblad");b.textContent="nie udało się zalogować";b.style.display=""}}}
-/* ---------- ustawienia ---------- */
-
-/* ---------- strefy czasowe i godziny (wybór zamiast pisania) ---------- */
-const STREFY=[
-["USA i Kanada",[["America/New_York","Wschodnie USA: Nowy Jork, Waszyngton, Miami, Atlanta (ET)"],["America/Chicago","Środkowe USA: Chicago, Dallas, Houston (CT)"],["America/Denver","Górskie USA: Denver, Salt Lake City (MT)"],["America/Phoenix","Arizona: Phoenix (bez zmiany czasu)"],["America/Los_Angeles","Zachodnie USA: Los Angeles, San Francisco, Seattle (PT)"],["America/Anchorage","Alaska: Anchorage"],["Pacific/Honolulu","Hawaje: Honolulu"],["America/Toronto","Kanada wschodnia: Toronto, Montreal"],["America/Vancouver","Kanada zachodnia: Vancouver"]]],
-["Ameryka Łacińska",[["America/Mexico_City","Meksyk: Meksyk"],["America/Bogota","Kolumbia, Peru: Bogota, Lima"],["America/Sao_Paulo","Brazylia: Sao Paulo, Rio de Janeiro"],["America/Argentina/Buenos_Aires","Argentyna: Buenos Aires"],["America/Santiago","Chile: Santiago"]]],
-["Europa",[["Europe/London","Wielka Brytania i Irlandia: Londyn, Dublin"],["Europe/Warsaw","Europa Środkowa: Warszawa, Berlin, Paryż, Rzym (CET)"],["Europe/Athens","Europa Wschodnia: Ateny, Helsinki, Kijów"],["Europe/Moscow","Rosja: Moskwa"]]],
-["Azja",[["Asia/Dubai","Zatoka Perska: Dubaj"],["Asia/Kolkata","Indie: Delhi, Mumbaj"],["Asia/Manila","Filipiny: Manila"],["Asia/Singapore","Singapur i Malezja"],["Asia/Shanghai","Chiny: Pekin, Szanghaj"],["Asia/Tokyo","Japonia: Tokio"],["Asia/Seoul","Korea Południowa: Seul"]]],
-["Australia i Oceania",[["Australia/Sydney","Australia wschodnia: Sydney, Melbourne"],["Australia/Perth","Australia zachodnia: Perth"],["Pacific/Auckland","Nowa Zelandia: Auckland"]]],
-["Afryka",[["Africa/Lagos","Nigeria: Lagos"],["Africa/Cairo","Egipt: Kair"],["Africa/Nairobi","Kenia: Nairobi"],["Africa/Johannesburg","RPA: Johannesburg, Kapsztad"]]]];
-function tzOff(strefa,ms){ms=Math.floor(ms/1000)*1000;const p=new Intl.DateTimeFormat("en-US",{timeZone:strefa,hourCycle:"h23",year:"numeric",month:"numeric",day:"numeric",hour:"numeric",minute:"numeric",second:"numeric"})
-  .formatToParts(new Date(ms)).reduce((a,x)=>(a[x.type]=+x.value,a),{});return Date.UTC(p.year,p.month-1,p.day,p.hour,p.minute,p.second)-ms}
-function utcTxt(strefa){const min=Math.round(tzOff(strefa,Date.now())/900000)*15,a=Math.abs(min);return"UTC"+(min>=0?"+":"−")+Math.floor(a/60)+(a%60?":"+String(a%60).padStart(2,"0"):"")}
-function wPolsce(strefa,hhmm){
-  if(!/^\d\d:\d\d$/.test(hhmm))return"";
-  try{const[h,mi]=hhmm.split(":").map(Number);const teraz=Date.now();
-    const lokalnie=teraz+tzOff(strefa,teraz);const d=new Date(lokalnie);
-    let guess=Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate(),h,mi);let t=guess-tzOff(strefa,guess);t=guess-tzOff(strefa,t);
-    const pl=t+tzOff("Europe/Warsaw",t),tam=t+tzOff(strefa,t);
-    const dzien=Math.floor(pl/864e5)-Math.floor(tam/864e5),gg=new Date(pl);
-    const txt=String(gg.getUTCHours()).padStart(2,"0")+":"+String(gg.getUTCMinutes()).padStart(2,"0");
-    return "= "+txt+" w Polsce"+(dzien>0?" (następnego dnia)":dzien<0?" (poprzedniego dnia)":"")}catch(e){return""}}
-function wypelnijStrefy(wybrana){const s=g("u_strefa");s.replaceChildren();let jest=false;
-  STREFY.forEach(([grupa,lista])=>{const og=document.createElement("optgroup");og.label=grupa;
-    lista.forEach(([id,opis])=>{const o=document.createElement("option");o.value=id;o.textContent=opis+" • "+utcTxt(id);if(id===wybrana){o.selected=true;jest=true}og.append(o)});s.append(og)});
-  if(!jest&&wybrana){const o=document.createElement("option");o.value=wybrana;o.textContent=wybrana;o.selected=true;s.prepend(o)}}
-function odswiezPodglad(){const st=g("u_strefa").value;
-  g("u_teraz").textContent=st?"Teraz tam: "+new Date().toLocaleString("pl-PL",{timeZone:st,weekday:"short",hour:"2-digit",minute:"2-digit"})+" ("+utcTxt(st)+"). U Ciebie: "+new Date().toLocaleString("pl-PL",{timeZone:"Europe/Warsaw",hour:"2-digit",minute:"2-digit"})+". Przeliczenie godzin na czas polski jest na dziś; gdy w USA lub Polsce zmieni się czas, różnica może się zmienić o godzinę.":"";
-  ["film","short"].forEach(t=>g("u_"+t+"_l").querySelectorAll(".gr").forEach(r=>{r.querySelector(".hint").textContent=wPolsce(st,r.querySelector("input").value)}))}
-function wiersz(kont,wartosc){const r=$("div","gr");const i=document.createElement("input");i.type="time";i.value=wartosc||"14:00";i.oninput=odswiezPodglad;
-  const h=$("span","hint","");const x=$("button","btn m2 zly","✕");x.type="button";x.title="Usuń godzinę";x.onclick=()=>{r.remove();odswiezPodglad()};r.append(i,h,x);g(kont).append(r)}
-function godziny(kont){return[...new Set([...g(kont).querySelectorAll("input")].map(i=>i.value).filter(Boolean))].sort()}
-function otworzUstawienia(c){const u=c.planer;g("u_tytul").textContent="Ustawienia • "+c.nazwa;wypelnijStrefy(u.strefa);g("u_zapas").value=u.zapas_dni;
-  g("u_film_l").replaceChildren();g("u_short_l").replaceChildren();(u.godziny.film||[]).forEach(x=>wiersz("u_film_l",x));(u.godziny.short||[]).forEach(x=>wiersz("u_short_l",x));
-  odswiezPodglad();g("u_blad").style.display="none";g("ustaw").classList.add("on");window.scrollTo(0,0)}
-g("u_strefa").onchange=odswiezPodglad;
-g("u_film_d").onclick=()=>{wiersz("u_film_l","14:00");odswiezPodglad()};g("u_short_d").onclick=()=>{wiersz("u_short_l","14:00");odswiezPodglad()};
-g("u_anuluj").onclick=()=>{g("ustaw").classList.remove("on");rysuj()};
-g("gear").onclick=()=>{const c=D.find(x=>x.id===cur);if(c)otworzUstawienia(c)};
-g("u_zapisz").onclick=async()=>{
-  try{const z=+g("u_zapas").value;if(!(z>=0&&z<=14))throw new Error("zapas 0-14 dni");
-    const film=godziny("u_film_l"),shorty=godziny("u_short_l"),strefa=g("u_strefa").value;
-    await db.collection("ustawienia").doc(cur).set({strefa,zapas_dni:z,godziny_film:film.join(","),godziny_short:shorty.join(","),
-      zmieniono:new Date().toISOString().replace(/\.\d+Z$/,"Z")});
-    const c=D.find(x=>x.id===cur);   /* od razu pokaż nową wartość; komputer pobierze ją w ciągu ok. minuty */
-    c.planer={...c.planer,strefa,zapas_dni:z,godziny:{film,short:shorty}};
-    oczekuje=Date.now();g("ustaw").classList.remove("on");rysuj();subtitle()}
-  catch(e){const b=g("u_blad");b.textContent=e.message;b.style.display=""}};
-if(window.Android&&Android.powiadomienia){g("dzwonek").style.display="";g("dzwonek").onclick=()=>Android.powiadomienia()}
+  const wejdz=async()=>{g("lblad").style.display="none";
+    try{await firebase.auth().signInWithEmailAndPassword(g("em").value.trim(),g("ha").value)}
+    catch(e){g("lblad").textContent="Nie udało się zalogować. Sprawdź e-mail i hasło.";g("lblad").style.display=""}};
+  g("zaloguj").onclick=wejdz;g("ha").onkeydown=e=>{if(e.key==="Enter")wejdz()}}
 init();
 </script></body></html>
