@@ -18,6 +18,10 @@
 <li>Shows the author a simple status page listing what was uploaded, with a link to open each video in YouTube Studio.</li>
 </ul>
 
+<h2>How Publikator uses Google user data</h2>
+<p>Publikator signs in to the author's own Google account with Google OAuth and requests one permission only: <code>https://www.googleapis.com/auth/youtube.upload</code> ("Manage your YouTube videos"). It uses this permission only to upload the author's own videos to the author's own YouTube channel (YouTube Data API <code>videos.insert</code>) and to set the custom thumbnail of a video it has just uploaded (<code>thumbnails.set</code>). It does not read, edit or delete existing videos, playlists, comments, subscribers or analytics, and it does not access the author's name, e-mail address or any other Google data.</p>
+<p>Publikator's use and transfer to any other app of information received from Google APIs will adhere to <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including the Limited Use requirements. Details are in the <a href="privacy.html">Privacy Policy</a>; access can be revoked at any time at <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>.</p>
+
 <h2>What it does not do</h2>
 <ul>
 <li>It is not a public service. Only the author uses it, with the author's own accounts.</li>
@@ -25,6 +29,9 @@
 <li>It does not copy or re-upload other people's content.</li>
 <li>It does not publish anything on TikTok by itself: every TikTok draft is published by the author in the TikTok app.</li>
 </ul>
+
+<h2>Privacy and terms</h2>
+<p>Read the <a href="privacy.html">Privacy Policy</a> and the <a href="terms.html">Terms of Service</a>.</p>
 
 <h2>Contact</h2>
 <p>Marcel Śmieszek · <a href="mailto:marcel.smieszek2519@gmail.com">marcel.smieszek2519@gmail.com</a></p>
@@ -35,6 +42,7 @@
 <p class="sub">Osobiste narzędzie do planowania publikacji własnych filmów</p>
 <p>Publikator to mała aplikacja na komputer, napisana i obsługiwana przez <strong>Marcela Śmieszka</strong>. Działa na komputerze autora i o wybranych przez niego porach wgrywa jego własne, oryginalne filmy na jego własne kanały YouTube oraz wysyła jego własne krótkie filmy do skrzynki jego konta TikTok jako szkice (autor publikuje je ręcznie w aplikacji TikTok), korzystając z oficjalnych interfejsów API.</p>
 <p>Narzędzie nie jest usługą publiczną. Używa go wyłącznie autor, na własnych kontach. Nie zbiera ani nie przechowuje danych widzów, subskrybentów ani innych użytkowników.</p>
+<p>Z konta Google aplikacja prosi wyłącznie o zakres <code>youtube.upload</code> i używa go tylko do wgrania własnego filmu autora na jego kanał YouTube (<code>videos.insert</code>) oraz ustawienia miniatury tego filmu (<code>thumbnails.set</code>). Nie odczytuje, nie zmienia ani nie usuwa istniejących filmów i nie ma dostępu do innych danych Google. Wykorzystanie i przekazywanie do innych aplikacji informacji otrzymanych z interfejsów API Google przez Publikator jest zgodne z <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, w tym z wymaganiami ograniczonego użycia (Limited Use). Szczegóły: <a href="privacy.html">Polityka prywatności</a> i <a href="terms.html">Warunki korzystania</a>.</p>
 <p>Kontakt: <a href="mailto:marcel.smieszek2519@gmail.com">marcel.smieszek2519@gmail.com</a></p>
 
 <footer>© 2026 Marcel Śmieszek</footer>
